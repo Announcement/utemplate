@@ -1,11 +1,11 @@
 var Template;
 
 Template = (function(element) {
-    var prototype;
-    var constructor;
+    var prototype, constructor;
 
     constructor = Template;
-    prototype = Template.prototype;
+
+    prototype = constructor.prototype;
 
     constructor.className = "Template";
 
@@ -16,14 +16,10 @@ Template = (function(element) {
 
         return element;
     };
-
     prototype.prepare = function(data) {
         var element, html, mods;
-
-        element = this.element.cloneNode(true);
-
-        html = element.innerHTML;
-
+        element = $(this.element).clone();
+        html = element.html();
         mods = {
             time: {
                 iso: function() {
@@ -31,7 +27,6 @@ Template = (function(element) {
                 }
             }
         };
-
         html = html.replace(/\{([^}]+)\}/g, function() {
             var original, capture;
 
@@ -54,9 +49,7 @@ Template = (function(element) {
             }
             return original;
         });
-
-        element.innerHTML = html;
-
+        element.html(html);
         return element;
     };
 
@@ -66,5 +59,3 @@ Template = (function(element) {
 
     return Template;
 }());
-
-module.exports = Template;
