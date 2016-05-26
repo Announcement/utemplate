@@ -19,8 +19,11 @@ Template = (function(element) {
 
     prototype.prepare = function(data) {
         var element, html, mods;
-        element = $(this.element).clone();
-        html = element.html();
+
+        element = this.element.cloneNode();
+
+        html = element.innerHTML;
+
         mods = {
             time: {
                 iso: function() {
@@ -28,6 +31,7 @@ Template = (function(element) {
                 }
             }
         };
+
         html = html.replace(/\{([^}]+)\}/g, function() {
             var original, capture;
 
@@ -50,7 +54,9 @@ Template = (function(element) {
             }
             return original;
         });
-        element.html(html);
+
+        element.innerHTML = html;
+
         return element;
     };
 
@@ -60,3 +66,5 @@ Template = (function(element) {
 
     return Template;
 }());
+
+module.exports = Template;

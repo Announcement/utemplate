@@ -23,5 +23,8 @@
     "prepare"
   ],
   "author": "Jacob Francis Powers",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^1.13.1"
+  }
 }
