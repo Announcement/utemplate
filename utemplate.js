@@ -119,4 +119,8 @@ Template = (function(element) {
     return Template;
 }());
 
+if (window !== undefined) {
+  window.Template = Template;
+}
+
 module.exports = Template;
