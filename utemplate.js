@@ -118,3 +118,5 @@ Template = (function(element) {
 
     return Template;
 }());
+
+module.exports = Template;
