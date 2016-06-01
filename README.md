@@ -1,4 +1,9 @@
 # utemplate
+Currently available on
+[github](https://github.com/Announcement/utemplate)
+and
+[npm](https://www.npmjs.com/package/utemplate)
+
 Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.
 
 1. Create your template, it won't be rendered
@@ -6,6 +11,11 @@ Templates are supported by default in HTML5, this is a single lightweight script
 3. Prepare the template with some data
 4. Insert the prepared template into the DOM
 
+# install
+## npm
+`npm i --save utemplate`
+## git
+`git clone git@github.com:Announcement/utemplate.git`
 ## html > head
 ~~~ html
 <template id="message">
@@ -32,14 +42,17 @@ This is where we're going to put it.
 
 ##
 ~~~ javascript
-element = document.getElementById("message");
-template = new Template(element);
+// get an element with a querySelector(or provide an element, jQuery object)
+template = new Template("#message");
+
 data = {
   title: 'Hello, world!',
   published: new Date(),
   message: 'How are you today?'
 };
+
 post = template.prepare(data);
+
 document.getElementById("messages").appendChild(post);
 ~~~
 
