@@ -1,4 +1,4 @@
-# utemplate
+# µtemplate
 Currently available on
 [github](https://github.com/Announcement/utemplate)
 and
@@ -11,12 +11,23 @@ Templates are supported by default in HTML5, this is a single lightweight script
 3. Prepare the template with some data
 4. Insert the prepared template into the DOM
 
-# install
-## npm
-`npm i --save utemplate`
-## git
+## install
+
+### npm
+
+ `npm i --save utemplate`
+
+### git
+
 `git clone git@github.com:Announcement/utemplate.git`
-## html > head
+
+## usage
+
+### head
+
+It doesn't *have* to be in the head, put it wherever you want, just make sure it's loaded before the script is run.
+We chose this location because if you don't have a `<head>` and `<body>` tags, most parsers throw the `<template>` in there by default.
+
 ~~~ html
 <template id="message">
   <article>
@@ -29,44 +40,56 @@ Templates are supported by default in HTML5, this is a single lightweight script
 </template>
 ~~~
 
-It doesn't *have* to be in the head, put it wherever you want, just make sure it's loaded before the script is run.
 
+### body
 
-## html > body
+This is where we're going to put it for all to see
+
 ~~~ html
 <section id="messages">
 </section>
 ~~~
 
-This is where we're going to put it.
+### script
 
-##
 ~~~ javascript
-// get an element with a querySelector(or provide an element, jQuery object)
+// string:querySelector, jQuery node, Element
 template = new Template("#message");
+messages = document.getElementById("messages");
 
+// some sample data
 data = {
   title: 'Hello, world!',
   published: new Date(),
   message: 'How are you today?'
 };
 
+// prepare the template with some data
 post = template.prepare(data);
 
-document.getElementById("messages").appendChild(post);
+// attach it to the DOM
+messages.appendChild(post);
 ~~~
 
+## frequently asked questions
+### That's nice, but why is it useful?
 
-## That's nice, but why is it useful?
+In the real world, data is going to be from a source.
+My environment has a couchdb document, but yours can be whatever you want it to be
 
-In the real world, data is going to be from a source. In my environment it's a couchdb document, but yours can be whatever you want it to be.
+- avoid writing *html* inside of *javascript*
+- don't `document.createElement` or `document.createTextNode` by hand
+- no more writing stringified json to the document.
 
-## Where does my data come from?
+
+### Where does my data come from?
 
 The properties directly correspond to the text inside of the template and are automatically filled with those keys.
 
-## Why wouldn't I use Angular, Meteor, or something *better*
+As of version **utemplate@1.1.0** they can be multiple levels deep such as `{a: {b: {c: 'd'}}}` and the template requests `{a.b.c}`
+
+### Why wouldn't I use Angular, Meteor, or something *better*
 
 If you enjoy reading and learning new things, then those will probably better for you. But if you want something small, fast and want it to just work, then microTemplates are for you.
 
-Oh, did I mention ours is less than 100 lines of clean code?
+Ours is very small and easy to learn, so if you're a *beginner* (or a *minimalist* like myself), then you should **definately** start here.

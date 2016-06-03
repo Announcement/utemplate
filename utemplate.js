@@ -29,8 +29,6 @@ Template = (function(element) {
         element = element.firstElementChild;
       }
 
-      console.log(element);
-
       // element is already provided
       if (element instanceof Element) {
         return element;
@@ -38,21 +36,14 @@ Template = (function(element) {
         throw new Error("An invalid or unknown document element node specified.");
       }
     }
-    function query(object, property) {
-      // original featured on gde33@freenode#javascript
-      // https://jsfiddle.net/gaby_de_wilde/cthj49aw/4/
 
-      var o;
-      var q;
-
-      o = object;
-      q = property;
-
-      keyset = (q.split(/[.{}]/g)).filter(function(e){return e});
-      result = keyset.reduce(function(oo,nn){ return oo[nn]},o);
-
-      return result;
+    function query(object, search) {
+      return search
+        .split(/[.{}]/g)
+        .filter(function(e) { return e; })
+        .reduce(function(a, b) { return a[b] }, o);
     }
+
     prototype.setElement = function(element) {
         element = asElement(element);
 
@@ -64,8 +55,13 @@ Template = (function(element) {
     prototype.configureAddons = function() {
       this.mods = this.mods || {};
       this.mods.time = this.mods.time || {};
+
       this.mods.time.iso = function() {
         return (new Date()).toISOString();
+      };
+
+      this.mods.time.locale = function() {
+        return (new Date()).toLocaleString();
       };
     };
 
@@ -76,6 +72,9 @@ Template = (function(element) {
         html = element.innerHTML;
         properties = /\{([^}]+)\}/g;
 
+        Object.defineProperties(data, {
+          query: {enumerable: false, value: query}
+        });
 
         html = html.replace(properties, withValues);
 
@@ -91,7 +90,7 @@ Template = (function(element) {
           mod = mod.shift();
 
           if (mods[mod] && mods[mod][func]) {
-              return mods[mod][func](capture);
+              return mods[mod][func].call(this, capture);
           }
         }
 
@@ -100,7 +99,7 @@ Template = (function(element) {
           var cache;
 
           if (capture.indexOf(":") !== -1) {
-            module = runAddon(capture);
+            module = runAddon.call(data, capture);
 
             if (module !== null && module !== undefined) {
               return module;
