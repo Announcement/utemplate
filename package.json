@@ -2,7 +2,7 @@
   "name": "utemplate",
   "version": "1.1.1",
   "description": "Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.",
-  "main": "utemplate.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,6 +25,13 @@
   "author": "Jacob Francis Powers",
   "license": "MIT",
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^1.6.0",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "gulp-webpack": "^1.5.0",
     "webpack": "^1.13.1"
   }
 }
