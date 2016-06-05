@@ -101,8 +101,8 @@ Template = (function(element) {
         var compiled;
 
         compiled = self.compile(child.textContent, data);
-        console.log(compiled);
-        element.childNodes[i].innerHTML = compiled.outerHTML;
+
+        element.childNodes[i].textContent = compiled.textContent;
       };
 
       loop = function loop(child, i) {
@@ -187,13 +187,4 @@ Template = (function(element) {
   return Template;
 }());
 
-(function(program){
-  'use strict';
-
-  if (typeof Nudist === 'undefined') {
-    this.queue = this.queue || []
-    return this.queue.push(program);
-  }
-
-  return new Nudist(program, this);
-}).call(this, Template);
+module.exports = Template;

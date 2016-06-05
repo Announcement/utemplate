@@ -64,13 +64,5 @@ Alchemist = (function(element) {
 
   return Alchemist;
 }());
-(function(program){
-  'use strict';
 
-  if (typeof Nudist === 'undefined') {
-    this.queue = this.queue || []
-    return this.queue.push(program);
-  }
-
-  return new Nudist(program, this);
-}).call(this, Template);
+module.exports = alchemist;
