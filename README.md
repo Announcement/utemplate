@@ -4,6 +4,8 @@ Currently available on
 and
 [npm](https://www.npmjs.com/package/utemplate)
 
+[![npm version](https://badge.fury.io/js/utemplate.svg)](https://badge.fury.io/js/utemplate)
+
 Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.
 
 1. Create your template, it won't be rendered

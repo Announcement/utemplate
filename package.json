@@ -4,7 +4,8 @@
   "description": "Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "gulp compile"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,7 @@
   ],
   "author": "Jacob Francis Powers",
   "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
     "gulp-rename": "^1.2.2",

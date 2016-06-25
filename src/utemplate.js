@@ -1,3 +1,8 @@
+var Template;
+var Alchemist;
+
+Alchemist = require('./alchemist');
+
 Template = (function(element) {
   'use strict';
 

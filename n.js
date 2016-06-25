@@ -65,12 +65,12 @@ Alchemist = (function(element) {
   return Alchemist;
 }());
 
-module.exports = alchemist;
+new Nudist(Alchemist);
 
 // You will probably never have to touch this file...
 // It detects the environment and service and exports the module accordingly.
 
-Nudist = (function(scope) {
+Nudist = (function() {
   'use strict';
 
   var prototype;
@@ -105,12 +105,12 @@ Nudist = (function(scope) {
     return '[object ' + this.name + ']'
   };
 
-  function Nudist(program) {
-    this.expose(program);
+  function Nudist(program, scope) {
+    this.expose(program, scope);
   }
 
   return Nudist;
-}(this));
+}());
 
 (function() {
   if (!!this.queue) {
@@ -121,11 +121,6 @@ Nudist = (function(scope) {
 }).call(this);
 
 new Nudist(Nudist, this);
-
-var Template;
-var Alchemist;
-
-Alchemist = require('./alchemist');
 
 Template = (function(element) {
   'use strict';
@@ -230,8 +225,8 @@ Template = (function(element) {
         var compiled;
 
         compiled = self.compile(child.textContent, data);
-
-        element.childNodes[i].textContent = compiled.textContent;
+        console.log(compiled);
+        element.childNodes[i].innerHTML = compiled.outerHTML;
       };
 
       loop = function loop(child, i) {
@@ -316,4 +311,13 @@ Template = (function(element) {
   return Template;
 }());
 
-module.exports = Template;
+(function(program){
+  'use strict';
+
+  if (typeof Nudist === 'undefined') {
+    this.queue = this.queue || []
+    return this.queue.push(program);
+  }
+
+  return new Nudist(program, this);
+}).call(this, Template);
