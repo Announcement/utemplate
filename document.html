@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{title}</title>
+    <script type='text/javascript'
+            id='lt_ws'
+            src='http://localhost:5678/socket.io/lighttable/ws.js'>
+    </script>
+  </head>
+  <body>
+    <h1>
+      {title}
+    </h1>
+    <ul>
+      <li>Hello, world!</li>
+      <li>What are you doing...</li>
+    </ul>
+    <pre id="output">
+
+    </pre>
+    <script type='text/javascript'>
+      var output;
+      var readNodes;
+
+      var body;
+      var bodyController;
+      var head;
+      var headController;
+      var scripts;
+      var scriptController;
+      var stylesheets;
+      var stylesheetController;
+
+      output = document.getElementById("output");
+
+      function query(object, property) {
+        var regex;
+        var filter;
+        var reduce;
+
+        regex = /[.{}]/g;
+        filter = function filter(source) { return source; };
+        reduce = function reduce(source, key) { return source[key]; };
+
+        return property
+        .split(regex)
+        .filter(filter)
+        .reduce(reduce, object);
+      }
+
+      readNodes = function readNodes(nodes, controller) {
+        var $results;
+        $results = [];
+        for (var i = 0; i < nodes.length; i++) {
+          $results.push(controller(nodes[i]));
+        }
+        return $results;
+      };
+
+      bodyController = function bodyController(element) {
+        if (element.innerHTML.test(/{.+}/gim)) {
+          element
+        }
+        return element;
+      };
+
+      headController = function headController(element) {
+        return element;
+      };
+
+      scriptController = function scriptController(element) {
+        return element;
+      };
+
+      stylesheetController = function stylesheetController(element) {
+        return element;
+      };
+
+      body = readNodes(document.body.childNodes, bodyController);
+      head = readNodes(document.head.childNodes, headController);
+      scripts = readNodes(document.scripts, scriptController);
+      stylesheets = readNodes(document.stylesheets, stylesheetController);
+
+      console.log(document.body.childNodes);
+      console.log(document.head.childNodes);
+      console.log(document.scripts);
+      console.log(document.stylesheets);
+    </script>
+  </body>
+</html>
