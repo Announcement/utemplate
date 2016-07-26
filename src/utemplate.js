@@ -288,8 +288,8 @@ Template = (function(element) {
             $ref[key] = escape(data[key]);
           }
         }
-        
-        source = JSON.stringify(data);
+
+        return JSON.stringify(data);
       }());
 
       element.template = this;
