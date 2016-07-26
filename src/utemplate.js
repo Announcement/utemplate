@@ -280,7 +280,17 @@ Template = (function(element) {
 
       this.appendSources(data);
 
-      source = btoa(JSON.stringify(data));
+      source = btoa(function() {
+        var $ref = {};
+
+        for (var key in data) {
+          if (data.hasOwnProperty((key))) {
+            $ref[key] = escape(data[key]);
+          }
+        }
+        
+        source = JSON.stringify(data);
+      }());
 
       element.template = this;
       element.rendered = source;
@@ -306,7 +316,7 @@ Template = (function(element) {
             current.appendChild(prepared);
             return prepared;
           }.call(this, this.prepare(previous), current.childNodes));
-          //return previous;
+          return previous;
         }
         return current(previous);
       }.bind(this), source);
@@ -333,12 +343,15 @@ Template = (function(element) {
 
     switch(typeof flow) {
       case 'undefined':
-        return false;
+        return this;
+
       case 'function':
         break;
+
       case 'object':
         this.appendSources(flow)
         return this;
+
       default:
         flow = Template.prototype.setElement(flow);
     }
