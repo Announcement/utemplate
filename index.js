@@ -1,3 +1,51 @@
+var Template;
+var Alchemist;
+var Nudist;
+
+Nudist = (function(scope) {
+  'use strict';
+
+  var prototype;
+  var constructor;
+
+  constructor = Nudist;
+  prototype = Nudist.prototype;
+
+  constructor.className = 'Nudist';
+
+  prototype.expose = function expose(input, scope) {
+    if (typeof define === 'function') {
+      define(input.name.toLowerCase(), [], function () { return input; } );
+    }
+
+    if (typeof module !== 'undefined') {
+      module.exports = input;
+    }
+
+    if (typeof window !== 'undefined') {
+      window[input.name] = input;
+    }
+
+    if (typeof global !== 'undefined') {
+      global[input.name] = input;
+    }
+
+    if (typeof scope !== 'undefined') {
+      scope[input.name] = input;
+    }
+  };
+
+  prototype.toString = function toString() {
+    return '[object ' + this.name + ']'
+  };
+
+  function Nudist(program) {
+    this.expose(program);
+  }
+
+  return Nudist;
+}(this));
+
 Alchemist = (function(element) {
   'use strict';
 
@@ -65,68 +113,6 @@ Alchemist = (function(element) {
   return Alchemist;
 }());
 
-module.exports = alchemist;
-
-// You will probably never have to touch this file...
-// It detects the environment and service and exports the module accordingly.
-
-Nudist = (function(scope) {
-  'use strict';
-
-  var prototype;
-  var constructor;
-
-  constructor = Nudist;
-  prototype = Nudist.prototype;
-
-  constructor.className = 'Nudist';
-
-  prototype.expose = function expose(input, scope) {
-    if (typeof define === 'function') {
-      define(input.name.toLowerCase(), [], function () { return input; } );
-    }
-
-    if (typeof module !== 'undefined') {
-      module.exports = input;
-    }
-
-    if (typeof window !== 'undefined') {
-      window[input.name] = input;
-    }
-
-    if (typeof global !== 'undefined') {
-      global[input.name] = input;
-    }
-
-    scope[input.name] = input;
-  };
-
-  prototype.toString = function toString() {
-    return '[object ' + this.name + ']'
-  };
-
-  function Nudist(program) {
-    this.expose(program);
-  }
-
-  return Nudist;
-}(this));
-
-(function() {
-  if (!!this.queue) {
-    for (var i = 0; i < this.queue.length; i++) {
-      new Nudist(this.queue[i], this);
-    }
-  }
-}).call(this);
-
-new Nudist(Nudist, this);
-
-var Template;
-var Alchemist;
-
-Alchemist = require('./alchemist');
-
 Template = (function(element) {
   'use strict';
 
@@ -148,9 +134,9 @@ Template = (function(element) {
     reduce = function reduce(source, key) { return source[key]; };
 
     return property
-      .split(regex)
-      .filter(filter)
-      .reduce(reduce, object);
+    .split(regex)
+    .filter(filter)
+    .reduce(reduce, object);
   }
 
   prototype.setElement = function setElement(element) {
@@ -231,7 +217,7 @@ Template = (function(element) {
 
         compiled = self.compile(child.textContent, data);
 
-        element.childNodes[i].textContent = compiled.textContent;
+        element.childNodes[i].textContent = compiled;
       };
 
       loop = function loop(child, i) {
@@ -263,7 +249,7 @@ Template = (function(element) {
     var areMissing;
 
     areMissing = function areMissing(property) {
-        return !object.hasOwnProperty(property);
+      return !object.hasOwnProperty(property);
     };
 
     return array.some(areMissing);
@@ -281,6 +267,7 @@ Template = (function(element) {
     var html;
     var properties;
     var resolve;
+    var source;
 
     if (validate(data)) {
 
@@ -291,17 +278,85 @@ Template = (function(element) {
 
       properties = /\{([^}]+)\}/g;
 
+      this.appendSources(data);
+
+      source = btoa(JSON.stringify(data));
+
+      element.template = this;
+      element.rendered = source;
+
       return element;
     }
   };
 
-  prototype.pipe = function pipe() {
+  prototype.render = function() {
+    this.sources.map(function(source) {
+      this.pipeline.reduce(function(previous, current) {
+        if (typeof current === 'function') {
+          return current(previous);
+        } else if (typeof current.childNodes !== 'undefined') {
+          return (function(prepared, children) {
+            for (var i = 0; i < children.length; i++) {
+              if (typeof children[i].rendered !== 'undefined') {
+                if (children[i].rendered === prepared.rendered) {
+                  return current.replaceChild(prepared, children[i]);
+                }
+              }
+            }
+            current.appendChild(prepared);
+            return prepared;
+          }.call(this, this.prepare(previous), current.childNodes));
+          //return previous;
+        }
+        return current(previous);
+      }.bind(this), source);
+    }.bind(this));
+    this.sources = [];
+    return this;
+  };
+
+  prototype.appendSources = function(object) {
+    if (object.constructor === Array) {
+      return object.map(this.appendSources);
+    }
+
+    this.sources.push(object);
+
+    return object;
+  };
+
+  prototype.pipe = function pipe(flow) {
     // resolve duplicates
-    // this.pipeline.push(flow);
+    var index;
+
+    index = this.pipeline.indexOf(flow);
+
+    switch(typeof flow) {
+      case 'undefined':
+        return false;
+      case 'function':
+        break;
+      case 'object':
+        this.appendSources(flow)
+        return this;
+      default:
+        flow = Template.prototype.setElement(flow);
+    }
+
+    if (index !== -1) {
+      this.pipeline.splice(index, 1, flow);
+    } else {
+      this.pipeline.push(flow);
+    }
+
+    this.render();
+
+    return this;
   };
 
   prototype.initialize = function initialize() {
     this.pipeline = [];
+    this.sources = [];
   };
 
   prototype.toString = function toString() {
@@ -316,4 +371,4 @@ Template = (function(element) {
   return Template;
 }());
 
-module.exports = Template;
+new Nudist(Template);

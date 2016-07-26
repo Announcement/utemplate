@@ -26,17 +26,17 @@
   "author": "Jacob Francis Powers",
   "license": "MIT",
   "dependencies": {
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.5.3",
-    "gulp-util": "^3.0.7",
-    "gulp-webpack": "^1.5.0",
-    "prelude-ls": "^1.1.2",
-    "webpack": "^1.13.1"
+    "prelude-ls": "^1.1.2"
   },
   "devDependencies": {
-    "chai": "^3.5.0"
+      "chai": "^3.5.0",
+      "gulp": "^3.9.1",
+      "gulp-concat": "^2.6.0",
+      "gulp-rename": "^1.2.2",
+      "gulp-sourcemaps": "^1.6.0",
+      "gulp-uglify": "^1.5.3",
+      "gulp-util": "^3.0.7",
+      "gulp-webpack": "^1.5.0",
+      "webpack": "^1.13.1"
   }
 }
