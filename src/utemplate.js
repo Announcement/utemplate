@@ -1,5 +1,6 @@
 var Template;
 var Alchemist;
+var Parasite;
 var Nudist;
 
 Nudist = (function(scope) {
@@ -111,6 +112,38 @@ Alchemist = (function(element) {
   }
 
   return Alchemist;
+}());
+
+Parasite = (function(){
+    'use strict';
+
+    var prototype;
+    var constructor;
+
+    constructor = Parasite;
+    prototype = Parasite.prototype;
+
+    constructor.className = "Parasite";
+
+    prototype.toString = function toString() {
+      return '[object ' + this.name + ']';
+    };
+
+    prototype.pipe = function pipe() {
+
+    };
+
+    prototype.initialize = function initialize() {
+      this.pipeline = [];
+      this.sources = [];
+    };
+
+    function Parasite(element) {
+      this.initialize();
+      this.setElement(element);
+    }
+
+    return Parasite;
 }());
 
 Template = (function(element) {
@@ -289,7 +322,7 @@ Template = (function(element) {
           }
         }
 
-        return JSON.stringify(data);
+        return JSON.stringify($ref);
       }());
 
       element.template = this;
@@ -302,21 +335,29 @@ Template = (function(element) {
   prototype.render = function() {
     this.sources.map(function(source) {
       this.pipeline.reduce(function(previous, current) {
+        if (previous === null || previous === undefined) return previous;
+
         if (typeof current === 'function') {
-          return current(previous);
-        } else if (typeof current.childNodes !== 'undefined') {
-          return (function(prepared, children) {
+          return current(previous) || previous;
+        }
+
+        if (typeof current.childNodes !== 'undefined') {
+          function setRendered(prepared, children) {
+            var child;
+
             for (var i = 0; i < children.length; i++) {
-              if (typeof children[i].rendered !== 'undefined') {
-                if (children[i].rendered === prepared.rendered) {
-                  return current.replaceChild(prepared, children[i]);
+              if (typeof (child = children[i]).rendered !== undefined) {
+                if (child.rendered === prepared.rendered) {
+                  return current.replaceChild(prepared, child);
                 }
               }
             }
+
             current.appendChild(prepared);
+
             return prepared;
-          }.call(this, this.prepare(previous), current.childNodes));
-          return previous;
+          }
+          return setRendered(this.prepare(previous), current.childNodes);
         }
         return current(previous);
       }.bind(this), source);

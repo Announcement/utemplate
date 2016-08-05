@@ -289,7 +289,7 @@ Template = (function(element) {
           }
         }
 
-        return JSON.stringify(data);
+        return JSON.stringify($ref);
       }());
 
       element.template = this;
