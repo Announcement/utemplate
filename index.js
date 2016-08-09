@@ -1,387 +1,254 @@
-var Template;
-var Alchemist;
-var Nudist;
+'use strict';
 
-Nudist = (function(scope) {
-  'use strict';
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
 
-  var prototype;
-  var constructor;
-
-  constructor = Nudist;
-  prototype = Nudist.prototype;
-
-  constructor.className = 'Nudist';
-
-  prototype.expose = function expose(input, scope) {
-    if (typeof define === 'function') {
-      define(input.name.toLowerCase(), [], function () { return input; } );
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
     }
-
-    if (typeof module !== 'undefined') {
-      module.exports = input;
-    }
-
-    if (typeof window !== 'undefined') {
-      window[input.name] = input;
-    }
-
-    if (typeof global !== 'undefined') {
-      global[input.name] = input;
-    }
-
-    if (typeof scope !== 'undefined') {
-      scope[input.name] = input;
-    }
-  };
-
-  prototype.toString = function toString() {
-    return '[object ' + this.name + ']'
-  };
-
-  function Nudist(program) {
-    this.expose(program);
   }
 
-  return Nudist;
-}(this));
-
-Alchemist = (function(element) {
-  'use strict';
-
-  var prototype;
-  var constructor;
-
-  var error;
-
-  constructor = Alchemist;
-  prototype = Alchemist.prototype;
-
-  constructor.className = "Alchemist";
-
-  error = {};
-  error.invalidElement = "Invalid or unknown element was specified.";
-  error.invalidElement = new Error(error.invalidElement);
-
-  prototype.asElement = function asElement(element) {
-    // find specified element
-    if (element.constructor === String) {
-      element = document.querySelector(element);
-    }
-
-    // it's a jQuery node
-    if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
-      element = element.get(0);
-    }
-
-    // html5 template content
-    if (element instanceof Element && element.tagName === 'TEMPLATE') {
-      element = element.content;
-    }
-
-    // defragment
-    if (element instanceof DocumentFragment && element.hasChildNodes()) {
-      element = element.firstElementChild;
-    }
-
-    // element is already provided
-    if (element instanceof Element) {
-      return element;
-    }
-
-    return error.invalidElement;
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
   };
+}();
 
-  prototype.setElement = function setElement(element) {
-    this.element = this.asElement(element);
+// transmutating elements =)
+var Alchemist = function () {
+	createClass(Alchemist, [{
+		key: 'setElement',
+		value: function setElement(element) {
+			this.element = Alchemist.asElement(element);
+		}
+	}, {
+		key: 'getElement',
+		value: function getElement() {
+			return this.element;
+		}
+	}], [{
+		key: 'asElement',
+		value: function asElement() {
+			// find specified element
+			if (element.constructor === String) {
+				element = document.querySelector(element);
+			}
 
-    return this.element;
-  };
+			// it's a jQuery node
+			if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
+				element = element.get(0);
+			}
 
-  prototype.getElement = function getElement() {
-    return this.element;
-  };
+			// html5 template content
+			if (element instanceof Element && element.tagName === 'TEMPLATE') {
+				element = element.content;
+			}
 
-  prototype.toString = function toString() {
-    return '[object ' + this.name + ']';
-  };
+			// defragment
+			if (element instanceof DocumentFragment && element.hasChildNodes()) {
+				element = element.firstElementChild;
+			}
 
-  function Alchemist(element) {
-    this.setElement(element);
-  }
+			// element is already provided
+			if (element instanceof Element) {
+				return element;
+			}
 
-  return Alchemist;
-}());
+			return error.invalidElement;
+		}
+	}]);
 
-Template = (function(element) {
-  'use strict';
+	function Alchemist(element) {
+		classCallCheck(this, Alchemist);
 
-  var prototype;
-  var constructor;
+		this.setElement(element);
+	}
 
-  constructor = Template;
-  prototype = Template.prototype;
+	return Alchemist;
+}();
 
-  constructor.className = "Template";
+// leeches off of the information...
+var Parasite = function () {
+	function Parasite(mutator) {
+		classCallCheck(this, Parasite);
 
-  function query(object, property) {
-    var regex;
-    var filter;
-    var reduce;
+		this.setMutator(mutator);
+	}
 
-    regex = /[.{}]/g;
-    filter = function filter(source) { return source; };
-    reduce = function reduce(source, key) { return source[key]; };
+	createClass(Parasite, [{
+		key: "getChildren",
+		value: function getChildren(element) {
+			return [].slice.call(element.childNodes, 0);
+		}
+	}, {
+		key: "getAttributes",
+		value: function getAttributes(element) {
+			return [].slice.call(element.attributes, 0);
+		}
+	}, {
+		key: "setChildren",
+		value: function setChildren(element) {
+			var _arguments = arguments;
 
-    return property
-    .split(regex)
-    .filter(filter)
-    .reduce(reduce, object);
-  }
+			var mutator;
+			var setChildren;
+			var setAttributes;
+			var children;
 
-  prototype.setElement = function setElement(element) {
-    if (typeof Alchemist !== 'undefined') {
-      element = Alchemist.prototype.asElement(element);
-    }
+			mutator = this.mutator;
+			setChildren = this.setChildren.bind(this);
 
-    this.element = element;
+			this.setAttributes(element);
+			children = this.getChildren(element);
 
-    return element;
-  };
+			children.forEach(function (child) {
+				var result;
 
-  prototype.compile = function compile(value, data) {
-    var regex;
-    var replacement;
+				if (child.nodeType === document.TEXT_NODE && child.textContent.trim().length > 0) {
+					result = mutator.apply(child, [child.textContent, _arguments[1], children]);
+				}
 
-    regex = /\{([^}]+)\}/g;
+				if (child.nodeType === document.ELEMENT_NODE) {
+					setChildren(child);
+				}
 
-    replacement = function replacement(original, property) {
-      return query(data, property);
-    };
+				if (result !== undefined && result !== null) {
+					child.textContent = result;
+				}
+			});
+		}
+	}, {
+		key: "setAttributes",
+		value: function setAttributes(element) {
+			var mutator;
+			var attributes;
 
-    value = value.trim();
-    value = value.replace(regex, replacement);
+			mutator = this.mutator;
+			attributes = this.getAttributes(element);
 
-    return value;
-  };
+			attributes.forEach(function (attribute) {
+				var result;
+				var name;
+				var value;
 
-  prototype.crawl = function crawl(element, data) {
-    var doAttributes;
-    var doChildren;
+				name = attribute.name;
+				value = attribute.value;
 
-    var self, args;
+				if (element.hasAttribute(name) && value.trim().length > 0) {
+					result = mutator.apply(element, [attribute.value, attribute.name, attributes]);
+				}
 
-    self = this;
-    args = arguments;
+				if (result !== undefined && result !== null) {
+					element.setAttribute(attribute.name, result);
+				}
+			});
+		}
+	}, {
+		key: "infect",
+		value: function infect(element) {
+			return this.setChildren(element);
+		}
+	}, {
+		key: "setMutator",
+		value: function setMutator(mutator) {
+			this.mutator = mutator;
+		}
+	}]);
+	return Parasite;
+}();
 
-    doAttributes = function doAttributes(element) {
-      var attributes;
-      var attribute;
-
-      var loop;
-
-      loop = function loop(attribute) {
-        var compiled;
-
-        if (element.hasAttribute(attribute.name)) {
-          compiled = self.compile(attribute.value, data);
-          element.setAttribute(attribute.name, compiled);
-        }
-      };
-
-      attributes = ([]).slice.call(element.attributes, 0);
-
-      return attributes.map(loop);
-    };
-
-    doChildren = function doChildren() {
-      var textNode = document.TEXT_NODE;
-      var elementNode = document.ELEMENT_NODE;
-
-      var setElement;
-      var setTextNode;
-
-      var children;
-      var child;
-
-      var loop;
-      var fixElement;
-      var fixTextNode;
-
-      setElement = function setElement(child, i, data) {
-        element.childNodes[i] = self.crawl(child, data);
-      };
-
-      setTextNode = function setTextNode(child, i, data) {
-        var compiled;
-
-        compiled = self.compile(child.textContent, data);
-
-        element.childNodes[i].textContent = compiled;
-      };
-
-      loop = function loop(child, i) {
-        if(child.nodeType === textNode) {
-          setTextNode(child, i, data);
-        }
-        if (child.nodeType === elementNode) {
-          setElement(child, i, data);
-        }
-      };
-
-      children = ([]).slice.call(element.childNodes, 0);
-
-      return children.map(loop);
-    };
-
-    if (element.hasAttributes()) {
-      doAttributes(element, data);
-    }
-
-    if (element.hasChildNodes()) {
-      doChildren(element, data);
-    }
-
-    return element;
-  };
-
-  function hasProperties(object, array) {
-    var areMissing;
-
-    areMissing = function areMissing(property) {
-      return !object.hasOwnProperty(property);
-    };
-
-    return array.some(areMissing);
-  }
-
-  function validate(data) {
-    if (!data) {
-      return false;
-    }
-    return true;
-  }
-
-  prototype.prepare = function prepare(data) {
-    var element;
-    var html;
-    var properties;
-    var resolve;
-    var source;
-
-    if (validate(data)) {
-
-      element = this.element.cloneNode(true);
-      resolve = this.crawl(element, data);
-
-      html = element.innerHTML;
-
-      properties = /\{([^}]+)\}/g;
-
-      this.appendSources(data);
-
-      source = btoa(function() {
-        var $ref = {};
-
-        for (var key in data) {
-          if (data.hasOwnProperty((key))) {
-            $ref[key] = escape(data[key]);
-          }
-        }
-
-        return JSON.stringify($ref);
-      }());
-
-      element.template = this;
-      element.rendered = source;
-
-      return element;
-    }
-  };
-
-  prototype.render = function() {
-    this.sources.map(function(source) {
-      this.pipeline.reduce(function(previous, current) {
-        if (typeof current === 'function') {
-          return current(previous);
-        } else if (typeof current.childNodes !== 'undefined') {
-          return (function(prepared, children) {
-            for (var i = 0; i < children.length; i++) {
-              if (typeof children[i].rendered !== 'undefined') {
-                if (children[i].rendered === prepared.rendered) {
-                  return current.replaceChild(prepared, children[i]);
-                }
-              }
+// expert on exposure ;)
+var Nudist = function () {
+    createClass(Nudist, null, [{
+        key: 'expose',
+        value: function expose(input) {
+            if (typeof define === 'function') {
+                define(input.name.toLowerCase(), [], function () {
+                    return input;
+                });
             }
-            current.appendChild(prepared);
-            return prepared;
-          }.call(this, this.prepare(previous), current.childNodes));
-          return previous;
+
+            if (typeof module !== 'undefined') {
+                module.exports = input;
+            }
+
+            if (typeof window !== 'undefined') {
+                window[input.name] = input;
+            }
+
+            if (typeof global !== 'undefined') {
+                global[input.name] = input;
+            }
+
+            if (typeof scope !== 'undefined') {
+                scope[input.name] = input;
+            }
         }
-        return current(previous);
-      }.bind(this), source);
-    }.bind(this));
-    this.sources = [];
-    return this;
-  };
+    }]);
 
-  prototype.appendSources = function(object) {
-    if (object.constructor === Array) {
-      return object.map(this.appendSources);
+    function Nudist(program) {
+        classCallCheck(this, Nudist);
+
+        Nudist.expose(program);
     }
 
-    this.sources.push(object);
+    return Nudist;
+}();
 
-    return object;
-  };
+// what we're actually dealing with.
 
-  prototype.pipe = function pipe(flow) {
-    // resolve duplicates
-    var index;
+var Template = function () {
+	function Template(element) {
+		classCallCheck(this, Template);
 
-    index = this.pipeline.indexOf(flow);
+		this.pipeline = [];
+		this.sources = [];
 
-    switch(typeof flow) {
-      case 'undefined':
-        return this;
+		this.alchemist = new Alchemist();
 
-      case 'function':
-        break;
+		this.setElement(element);
+	}
 
-      case 'object':
-        this.appendSources(flow)
-        return this;
+	createClass(Template, [{
+		key: 'setElement',
+		value: function setElement(element) {
+			if (typeof Alchemist !== 'undefined') {
+				element = Alchemist.asElement(element);
+			}
 
-      default:
-        flow = Template.prototype.setElement(flow);
-    }
+			this.element = element;
 
-    if (index !== -1) {
-      this.pipeline.splice(index, 1, flow);
-    } else {
-      this.pipeline.push(flow);
-    }
+			return element;
+		}
+	}, {
+		key: 'pipe',
+		value: function pipe(flow) {
+			// the 'good' stuff
 
-    this.render();
-
-    return this;
-  };
-
-  prototype.initialize = function initialize() {
-    this.pipeline = [];
-    this.sources = [];
-  };
-
-  prototype.toString = function toString() {
-    return '[object ' + this.name + ']';
-  };
-
-  function Template(element) {
-    this.initialize();
-    this.setElement(element);
-  }
-
-  return Template;
-}());
+			/*
+      -> is it an event source
+    -> is it an event
+    -> is it data
+    -> is it a handler
+    -> is it a mutator
+   		 -> when did it happen, before or after input?
+    -> ...
+   		 */
+		}
+	}]);
+	return Template;
+}();
 
 new Nudist(Template);
+
+module.exports = Template;
