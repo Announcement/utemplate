@@ -55,7 +55,7 @@ This is where we're going to put it for all to see
 ### script
 
 ~~~ javascript
-// string:querySelector, jQuery node, Element
+// string:querySelector, jQuery node, Element (see Alchemist)
 template = new Template("#message");
 messages = document.getElementById("messages");
 
@@ -67,10 +67,13 @@ data = {
 };
 
 // prepare the template with some data
-post = template.prepare(data);
+template.pipe(data);
 
 // attach it to the DOM
-messages.appendChild(post);
+template.pipe(messages);
+
+// friendly reminder that pipes are chainable
+// template.pipe(data).pipe(messages);
 ~~~
 
 ## frequently asked questions
