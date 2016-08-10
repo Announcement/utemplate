@@ -28,3 +28,4 @@ Exports a module via commonjs, `global`, **AMD** or `window` with a fallback to 
 ## Notes
 - it probably won't work unless it is on the top layer
 - this is an *alternative* the the synchronous commonjs model, and does not require you use webpack or browserify; it is fully compatible if you do choose to opt-in.
+- Brought back with version 2.1.0, can export modules along side our default rollup if needed.

@@ -3,7 +3,8 @@ import babel from 'rollup-plugin-babel';
 
 export default {
   entry: 'src/ntemplate.js',
-  format: 'cjs',
+  format: 'umd',
+  moduleName: 'Template',
   plugins: [ json(), babel() ],
   dest: 'index.js'
 };
