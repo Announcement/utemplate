@@ -317,8 +317,23 @@
   			return element;
   		}
   	}, {
-  		key: 'createSource',
-  		value: function createSource(source) {
+  		key: 'fromEventSource',
+  		value: function fromEventSource(source) {
+  			// on 'data', <pipe>
+  		}
+  	}, {
+  		key: 'fromPromise',
+  		value: function fromPromise(action) {
+  			// then <pipe>
+  		}
+  	}, {
+  		key: 'fromEvent',
+  		value: function fromEvent(action) {
+  			// addEventListener 'click', <pipe>
+  		}
+  	}, {
+  		key: 'fromData',
+  		value: function fromData(data) {
   			var tracker;
 
   			tracker = {};
@@ -330,20 +345,15 @@
   			return tracker;
   		}
   	}, {
-  		key: 'fromEventSource',
-  		value: function fromEventSource(source) {}
-  	}, {
-  		key: 'fromEvent',
-  		value: function fromEvent(action) {}
-  	}, {
-  		key: 'fromData',
-  		value: function fromData(data) {}
-  	}, {
   		key: 'fromHandler',
-  		value: function fromHandler(handler) {}
+  		value: function fromHandler(handler) {
+  			// <pipe> addEventListener, 'click'
+  		}
   	}, {
   		key: 'fromMutator',
-  		value: function fromMutator(mutator) {}
+  		value: function fromMutator(mutator) {
+  			// element level transformations
+  		}
   	}, {
   		key: 'fromElement',
   		value: function fromElement(element) {
@@ -388,8 +398,11 @@
   					var genetics = function genetics(input) {
   						return compile(input, parsed.source);
   					};
+
   					var parasite = new Parasite(genetics);
   					var template = parasite.infect(cloned);
+
+  					// reduce across mutators
 
   					template.rendered = encoder(parsed.source);
 
@@ -471,7 +484,7 @@
   		key: 'pipe',
   		value: function pipe(flow) {
   			if (flow.constructor === Object) {
-  				this.createSource(flow);
+  				this.fromData(flow);
   			} else if (flow instanceof Element) {
   				this.fromElement(flow);
   			} else {
