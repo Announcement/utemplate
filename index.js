@@ -487,6 +487,8 @@
   				this.fromData(flow);
   			} else if (flow instanceof Element) {
   				this.fromElement(flow);
+  			} else if (flow instanceof String) {
+  				this.fromElement(this.getElement(flow));
   			} else {
   				this.route.apply(this, arguments);
   			}
