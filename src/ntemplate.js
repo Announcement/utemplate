@@ -52,6 +52,10 @@ export default class Template {
 		this.setElement(element);
 	}
 
+	get version() {
+		return version;
+	}
+
 	getElement(element) {
 		if (typeof Alchemist !== 'undefined') {
       element = Alchemist.asElement(element);

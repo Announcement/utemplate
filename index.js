@@ -4,6 +4,8 @@
   (global.Template = factory());
 }(this, function () { 'use strict';
 
+  var version = "2.1.2";
+
   var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
@@ -496,6 +498,11 @@
   			this.render();
 
   			return this;
+  		}
+  	}, {
+  		key: 'version',
+  		get: function get() {
+  			return version;
   		}
   	}]);
   	return Template;
