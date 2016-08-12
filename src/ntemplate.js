@@ -173,3 +173,6 @@ export default class Template {
 		return this;
 	}
 }
+
+new Nudist(Parasite);
+new Nudist(Alchemist);
