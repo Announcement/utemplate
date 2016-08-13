@@ -1,6 +1,6 @@
 {
   "name": "utemplate",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "description": "Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.",
   "main": "index.js",
   "scripts": {
