@@ -23,6 +23,8 @@ var version = (new JSONReader('../package.json')).version;
 var chai = require('chai');
 var expect = chai.expect;
 
+chai.should();
+chai.use(require('chai-as-promised'));
 // var DOMPlugin = require('chai-dom');
 
 // var Template = require('../index.js');
@@ -61,5 +63,19 @@ describe('Template', function() {
 });
 
 describe('Environment', function() {
-	describe('Template', function(){});
+	describe('Template', function(){
+		it('expect to be available globally', function() {
+			expect(Template).to.exist;
+		});
+	});
+	describe('Alchemist', function(){
+		it('expect to be available globally', function() {
+			expect(Alchemist).to.exist;
+		});
+	});
+	describe('Parasite', function(){
+		it('expect to be available globally', function() {
+			expect(Parasite).to.exist;
+		});
+	});
 });
