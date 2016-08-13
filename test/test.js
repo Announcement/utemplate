@@ -27,7 +27,7 @@ chai.should();
 chai.use(require('chai-as-promised'));
 // var DOMPlugin = require('chai-dom');
 
-// var Template = require('../index.js');
+var Template = require('../index.js');
 
 // chai.use(DOMPlugin);
 
@@ -51,6 +51,12 @@ describe('Nudist', function() {
 });
 
 describe('Template', function() {
+	describe('constructor', function() {});
+	describe('version', function() {
+		it('should be the current version', function() {
+			expect(version).to.be.eql((new Template()).version);
+		})
+	});
 	describe('#setElement(element)', function() {});
 	describe('#getEventSource(source)', function() {});
 	describe('#getEvent(event)', function() {});
@@ -68,14 +74,22 @@ describe('Environment', function() {
 			expect(Template).to.exist;
 		});
 	});
+
 	describe('Alchemist', function(){
 		it('expect to be available globally', function() {
 			expect(Alchemist).to.exist;
 		});
 	});
+
 	describe('Parasite', function(){
 		it('expect to be available globally', function() {
 			expect(Parasite).to.exist;
+		});
+	});
+
+	describe('Nudist', function(){
+		it('expect to be available globally', function() {
+			expect(Nudist).to.exist;
 		});
 	});
 });

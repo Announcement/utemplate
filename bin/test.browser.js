@@ -19,6 +19,12 @@ describe('Environment', function() {
 		});
 	});
 
+	describe('Nudist', function(){
+		it('should be accessable globally', function() {
+			expect(Nudist).to.exist;
+		});
+	});
+
 	describe('Document', function() {
 		it('should be accessable globally', function() {
 			expect(document).to.exist;
