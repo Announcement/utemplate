@@ -1,7 +1,5 @@
 var expect = [chai.expect, chai.should()].shift()
 
-var runtime = new Runtime();
-
 describe('Environment', function() {
 	describe('Template', function(){
 		it('should be accessable globally', function() {
