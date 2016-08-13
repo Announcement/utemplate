@@ -75,12 +75,6 @@ describe('Alchemist', function() {
 			expect(Alchemist).to.have.property('fromQuerySelector');
 		});
 
-		// this looks like a bug with the testing framework...
-
-		// it('should be a working function', function() {
-		// 	Alchemist.should.to.respondTo('fromQuerySelector');
-		// });
-
 		it('should transform a query selector', function() {
 			expect(Alchemist.fromQuerySelector('body')).to.be.an.instanceof(Element);
 		});
@@ -200,28 +194,282 @@ describe('Alchemist', function() {
 });
 
 describe('Parasite', function() {
-	describe('#getChildren(element)', function() {});
-	describe('#setChildren(element)', function() {});
-	describe('#addChildren(element)', function() {});
-	describe('#allChildren(element)', function() {});
-	describe('#getAttributes(element)', function() {});
-	describe('#setAttributes(element)', function() {});
-	describe('#infect(element)', function() {});
-	describe('#setMutator(method)', function(){});
+	describe('#getChildren(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('getChildren');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('getChildren');
+		});
+	});
+	describe('#setChildren(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('setChildren');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('setChildren');
+		});
+	});
+	describe('#addChildren(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('addChildren');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('addChildren');
+		});
+	});
+	describe('#allChildren(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('allChildren');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('allChildren');
+		});
+	});
+	describe('#getAttributes(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('getAttributes');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('getAttributes');
+		});
+	});
+	describe('#setAttributes(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('setAttributes');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('setAttributes');
+		});
+	});
+	describe('#infect(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('infect');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('infect');
+		});
+	});
+	describe('#setMutator(method)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('setMutator');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var parasite;
+
+			parasite = new Parasite(function(){});
+
+			expect(parasite).to.have.property('setMutator');
+		});
+	});
 });
 
 describe('Nudist', function() {
-	describe('@expose(client)', function() {});
+	describe('@expose(client)', function() {
+		it('should be an an accessable property from constructor', function() {
+			expect(Nudist).to.have.property('expose');
+		});
+		it('should make an object public', function() {
+			var object;
+
+			object = {
+				name: 'NudistTestObject',
+				ping: 'pong'
+			};
+
+			Nudist.expose(object);
+
+			expect(NudistTestObject).to.exist;
+		})
+	});
 });
 
 describe('Template', function() {
-	describe('#setElement(element)', function() {});
-	describe('#getEventSource(source)', function() {});
-	describe('#getEvent(event)', function() {});
-	describe('#getData(data)', function() {});
-	describe('#getHandler(handler)', function() {});
-	describe('#getMutator(mutator)', function() {});
-	describe('#route(connection)', function() {});
-	describe('#render(renderer)', function() {});
-	describe('#pipe(flow)', function() {});
+	describe('#setElement(element)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('setElement');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('setElement');
+		});
+	});
+	describe('#fromEventSource(source)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('fromEventSource');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('fromEventSource');
+		});
+	});
+	describe('#fromEvent(event)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('fromEvent');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('fromEvent');
+		});
+
+	});
+	describe('#fromData(data)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('fromData');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('fromData');
+		});
+
+	});
+	describe('#fromHandler(handler)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('fromHandler');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('fromHandler');
+		});
+
+	});
+	describe('#fromMutator(mutator)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('fromMutator');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('fromMutator');
+		});
+
+	});
+	describe('#route(connection)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('route');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('route');
+		});
+
+	});
+	describe('#render(renderer)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('render');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('render');
+		});
+
+	});
+	describe('#pipe(flow)', function() {
+		it('should not be an accessable property from constructor', function() {
+			expect(Parasite).to.not.have.property('pipe');
+		});
+
+		it('should be an accessable property from instance', function() {
+			var template;
+			var element;
+
+			element = document.createElement('template');
+
+			template = new Template(element);
+
+			expect(template).to.have.property('pipe');
+		});
+
+	});
 });
