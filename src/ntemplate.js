@@ -21,8 +21,8 @@ let compile = (value, data) => {
 	};
 
 	return value
-		.trim()
-		.replace(regexp, replacement);
+	.trim()
+	.replace(regexp, replacement);
 };
 
 // what we're actually dealing with.
@@ -43,8 +43,8 @@ export default class Template {
 
 	getElement(element) {
 		if (typeof Alchemist !== 'undefined') {
-      element = Alchemist.asElement(element);
-    }
+			element = Alchemist.asElement(element);
+		}
 
 		return element;
 	}
@@ -52,7 +52,7 @@ export default class Template {
 	setElement(element) {
 		element = this.getElement(element);
 
-    this.element = element;
+		this.element = element;
 
 		return element;
 	}
@@ -166,3 +166,5 @@ export default class Template {
 
 new Nudist(Parasite);
 new Nudist(Alchemist);
+
+Nudist.expose(Nudist);
