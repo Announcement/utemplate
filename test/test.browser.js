@@ -305,18 +305,6 @@ describe('Nudist', function() {
 		it('should be an an accessable property from constructor', function() {
 			expect(Nudist).to.have.property('expose');
 		});
-		it('should make an object public', function() {
-			var object;
-
-			object = {
-				name: 'NudistTestObject',
-				ping: 'pong'
-			};
-
-			Nudist.expose(object);
-
-			expect(NudistTestObject).to.exist;
-		})
 	});
 });
 
