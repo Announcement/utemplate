@@ -20,25 +20,10 @@ let compile = (value, data) => {
 		return query(data, property);
 	};
 
-	value = value.trim();
-	value = value.replace(regexp, replacement);
-	console.log(value);
-	return value;
+	return value
+		.trim()
+		.replace(regexp, replacement);
 };
-
-let encoder = (data) => {
-	return btoa(function() {
-		var $ref = {};
-
-		for (var key in data) {
-			if (data.hasOwnProperty((key))) {
-				$ref[key] = escape(data[key]);
-			}
-		}
-
-		return JSON.stringify($ref);
-	}());
-}
 
 // what we're actually dealing with.
 export default class Template {
@@ -88,7 +73,7 @@ export default class Template {
 		var tracker;
 
 		tracker = {};
-		tracker.source = source;
+		tracker.source = data;
 		tracker.passed = [];
 
 		this.sources.push(tracker);
@@ -108,8 +93,18 @@ export default class Template {
 		this.outputs.push(element);
 	}
 
-	route(connection) {
-		this.pipeline.push(connection);
+	route(flow) {
+		var that;
+
+		if (flow.constructor === Object) {
+			return this.fromData(flow);
+		}
+
+		if (that = this.getElement(flow)) {
+			return this.fromElement(that);
+		}
+
+		this.pipeline.push(flow);
 	}
 
 	render() {
@@ -129,47 +124,42 @@ export default class Template {
 			return previous;
 		}).bind(this);
 
+		let mutationParser = ((previous, current) => {
+			let response = current(previous);
+
+			if (response !== undefined && response !== null) {
+				return response;
+			}
+
+			return previous;
+		}).bind(this);
+
 		for (let source of this.sources) {
-			let cloned = this.element.cloneNode(true);
 			let parsed = this.pipeline.reduce(parser, source);
+			let cloned = this.element.cloneNode(true);
+
 			let genetics = ((input) => {
 				return compile(input, parsed.source);
 			});
 
 			let parasite = new Parasite(genetics);
-			let template = parasite.infect(cloned);
+
+			if (parsed.compiled === undefined) {
+				parasite.infect(cloned);
+				parsed.compiled = parasite.infection;
+			} else {
+				parasite.infection = parsed.compiled;
+			}
 
 			// reduce across mutators
 
-			template.rendered = encoder(parsed.source);
-
-			for (let output of this.outputs) {
-				var rendered;
-				for (let child of output.childNodes) {
-					if (child.rendered === template.rendered) {
-						rendered = output.replaceChild(template, child);
-					}
-				}
-				if (rendered === undefined) {
-					output.appendChild(template);
-				}
-			}
+			this.outputs.forEach(parasite.addChildren.bind(parasite));
 		}
 	}
 
 	pipe(flow) {
-		if (flow.constructor === Object) {
-			this.fromData(flow);
-		} else if (flow instanceof Element) {
-			this.fromElement(flow);
-		} else if (flow instanceof String) {
-			this.fromElement(this.getElement(flow));
-		} else {
-			this.route.apply(this, arguments);
-		}
-
+		this.route(flow);
 		this.render();
-
 		return this;
 	}
 }

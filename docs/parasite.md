@@ -9,8 +9,12 @@
 - Parasites modify **in place**, so if you plan on reusing your host then you should probably clone it.
 - If parasites have faulty instructions the will be inaffective and enter *read-only* mode
 - Parasitical mutations are very **unsafe** and should be used with caution to return a String
-- A parasite is not as extensive as *Alchemist* and is only aware of `TEXT_NODE` and `ELEMENT_NODE`
+- A parasite ~is not as extensive as *Alchemist* and ~ is only aware of `Text` and `Element`
 - Only Text Content and Attribute Values will be modified.
+
+## History
+- This was not introduced until v2
+- In version v2.2 a slight modification was made to handle Templates internally, turns out `DocumentFragment` seemlessly integrate into the existing code without many changes (just a few characters)
 
 ## example
 ~~~ javascript

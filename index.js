@@ -4,7 +4,7 @@
   (global.Template = factory());
 }(this, function () { 'use strict';
 
-  var version = "2.1.3";
+  var version = "2.2.0";
 
   var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -43,27 +43,53 @@
   			return this.element;
   		}
   	}], [{
-  		key: 'asElement',
-  		value: function asElement(element) {
+  		key: 'fromQuerySelector',
+  		value: function fromQuerySelector(element) {
   			// find specified element
   			if (element.constructor === String) {
-  				element = document.querySelector(element);
+  				return document.querySelector(element) || element;
   			}
 
+  			return element;
+  		}
+  	}, {
+  		key: 'fromSizzle',
+  		value: function fromSizzle(element) {
   			// it's a jQuery node
   			if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
-  				element = element.get(0);
+  				return element.get(0) || element;
   			}
 
+  			return element;
+  		}
+  	}, {
+  		key: 'fromTemplate',
+  		value: function fromTemplate(element) {
   			// html5 template content
   			if (element instanceof Element && element.tagName === 'TEMPLATE') {
-  				element = element.content;
+  				return element.content || element;
   			}
 
+  			return element;
+  		}
+  	}, {
+  		key: 'fromFragment',
+  		value: function fromFragment(element) {
   			// defragment
   			if (element instanceof DocumentFragment && element.hasChildNodes()) {
-  				element = element.firstElementChild;
+  				return element.firstElementChild || element;
   			}
+
+  			return element;
+  		}
+  	}, {
+  		key: 'asElement',
+  		value: function asElement(element) {
+  			element = [Alchemist.fromQuerySelector, Alchemist.fromSizzle,
+  			// Alchemist.fromTemplate,
+  			Alchemist.fromFragment].reduce(function (previous, current) {
+  				return current(previous) || previous;
+  			}, element);
 
   			// element is already provided
   			if (element instanceof Element) {
@@ -83,7 +109,16 @@
   	return Alchemist;
   }();
 
-  // leeches off of the information...
+  function equal(a) {
+  	return function (b) {
+  		return a === b;
+  	};
+  }
+
+  function asArray(object) {
+  	return Array.prototype.slice.call(object, 0);
+  }
+
   var Parasite = function () {
   	function Parasite(mutator) {
   		classCallCheck(this, Parasite);
@@ -92,20 +127,30 @@
   	}
 
   	createClass(Parasite, [{
-  		key: "getChildren",
+  		key: 'getChildren',
   		value: function getChildren(element) {
-  			return [].slice.call(element.childNodes, 0);
+  			if (typeof element.content !== 'undefined') {
+  				element = element.content;
+  			}
+
+  			return asArray(element.childNodes);
   		}
   	}, {
-  		key: "getAttributes",
-  		value: function getAttributes(element) {
-  			return [].slice.call(element.attributes, 0);
-  		}
-  	}, {
-  		key: "setChildren",
-  		value: function setChildren(element) {
-  			var attributes = this.setAttributes(element);
-  			var children = this.getChildren(element);
+  		key: 'allChildren',
+  		value: function (_allChildren) {
+  			function allChildren(_x) {
+  				return _allChildren.apply(this, arguments);
+  			}
+
+  			allChildren.toString = function () {
+  				return _allChildren.toString();
+  			};
+
+  			return allChildren;
+  		}(function (element) {
+  			var children;
+
+  			children = this.getChildren(element);
 
   			var _iteratorNormalCompletion = true;
   			var _didIteratorError = false;
@@ -115,20 +160,10 @@
   				for (var _iterator = children[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
   					var child = _step.value;
 
-  					var result;
-
-  					if (child.nodeType === document.TEXT_NODE) {
-  						if (child.textContent.trim().length > 0) {
-  							result = this.mutator.apply(child, [child.textContent, arguments[1], children]);
-  						}
-  					}
-
-  					if (child.nodeType === document.ELEMENT_NODE) {
-  						this.setChildren(child);
-  					}
-
-  					if (result !== undefined && result !== null) {
-  						child.textContent = result;
+  					if (child instanceof Element) {
+  						children = children.concat(allChildren(child));
+  					} else {
+  						children.push(child);
   					}
   				}
   			} catch (err) {
@@ -146,36 +181,41 @@
   				}
   			}
 
-  			;
-
-  			return element;
+  			return children;
+  		})
+  	}, {
+  		key: 'getAttributes',
+  		value: function getAttributes(element) {
+  			return asArray(element.attributes);
   		}
   	}, {
-  		key: "setAttributes",
-  		value: function setAttributes(element) {
-  			var attributes = this.getAttributes(element);
+  		key: 'setChildren',
+  		value: function setChildren(element) {
+  			var attributes = this.setAttributes(element);
+  			var children = this.getChildren(element);
 
   			var _iteratorNormalCompletion2 = true;
   			var _didIteratorError2 = false;
   			var _iteratorError2 = undefined;
 
   			try {
-  				for (var _iterator2 = attributes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-  					var attribute = _step2.value;
+  				for (var _iterator2 = children[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+  					var child = _step2.value;
 
   					var result;
-  					var name;
-  					var value;
 
-  					name = attribute.name;
-  					value = attribute.value;
+  					if (child.constructor === Text) {
+  						if (child.textContent.trim().length > 0) {
+  							result = this.mutator.apply(child, [child.textContent, arguments[1], children]);
+  						}
+  					}
 
-  					if (element.hasAttribute(name) && value.trim().length > 0) {
-  						result = this.mutator.apply(element, [attribute.value, attribute.name, attributes]);
+  					if (child instanceof Element) {
+  						this.setChildren(child);
   					}
 
   					if (result !== undefined && result !== null) {
-  						element.setAttribute(attribute.name, result);
+  						child.textContent = result;
   					}
   				}
   			} catch (err) {
@@ -193,15 +233,103 @@
   				}
   			}
 
+  			;
+
+  			return element;
+  		}
+  	}, {
+  		key: 'setAttributes',
+  		value: function setAttributes(element) {
+  			var attributes = this.getAttributes(element);
+
+  			var _iteratorNormalCompletion3 = true;
+  			var _didIteratorError3 = false;
+  			var _iteratorError3 = undefined;
+
+  			try {
+  				for (var _iterator3 = attributes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+  					var attribute = _step3.value;
+
+  					var result;
+  					var name;
+  					var value;
+
+  					name = attribute.name;
+  					value = attribute.value;
+
+  					if (element.hasAttribute(name) && value.trim().length > 0) {
+  						result = this.mutator.apply(element, [attribute.value, attribute.name, attributes]);
+  					}
+
+  					if (result !== undefined && result !== null) {
+  						element.setAttribute(attribute.name, result);
+  					}
+  				}
+  			} catch (err) {
+  				_didIteratorError3 = true;
+  				_iteratorError3 = err;
+  			} finally {
+  				try {
+  					if (!_iteratorNormalCompletion3 && _iterator3.return) {
+  						_iterator3.return();
+  					}
+  				} finally {
+  					if (_didIteratorError3) {
+  						throw _iteratorError3;
+  					}
+  				}
+  			}
+
   			return attributes;
   		}
   	}, {
-  		key: "infect",
+  		key: 'infect',
   		value: function infect(element) {
-  			return this.setChildren(element);
+  			element = this.setChildren(element);
+
+  			this.infection = element;
+
+  			return element;
   		}
   	}, {
-  		key: "setMutator",
+  		key: 'addChildren',
+  		value: function addChildren(element) {
+  			var infection;
+  			var children;
+
+  			children = this.getChildren(this.infection);
+
+  			var _iteratorNormalCompletion4 = true;
+  			var _didIteratorError4 = false;
+  			var _iteratorError4 = undefined;
+
+  			try {
+  				for (var _iterator4 = children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+  					var child = _step4.value;
+
+  					if (!this.getChildren(element).some(equal(child))) {
+  						element.appendChild(child);
+  					}
+  				}
+  			} catch (err) {
+  				_didIteratorError4 = true;
+  				_iteratorError4 = err;
+  			} finally {
+  				try {
+  					if (!_iteratorNormalCompletion4 && _iterator4.return) {
+  						_iterator4.return();
+  					}
+  				} finally {
+  					if (_didIteratorError4) {
+  						throw _iteratorError4;
+  					}
+  				}
+  			}
+
+  			return element;
+  		}
+  	}, {
+  		key: 'setMutator',
   		value: function setMutator(mutator) {
   			this.mutator = mutator;
   		}
@@ -265,24 +393,7 @@
   		return query(data, property);
   	};
 
-  	value = value.trim();
-  	value = value.replace(regexp, replacement);
-  	console.log(value);
-  	return value;
-  };
-
-  var encoder = function encoder(data) {
-  	return btoa(function () {
-  		var $ref = {};
-
-  		for (var key in data) {
-  			if (data.hasOwnProperty(key)) {
-  				$ref[key] = escape(data[key]);
-  			}
-  		}
-
-  		return JSON.stringify($ref);
-  	}());
+  	return value.trim().replace(regexp, replacement);
   };
 
   // what we're actually dealing with.
@@ -339,7 +450,7 @@
   			var tracker;
 
   			tracker = {};
-  			tracker.source = source;
+  			tracker.source = data;
   			tracker.passed = [];
 
   			this.sources.push(tracker);
@@ -363,8 +474,18 @@
   		}
   	}, {
   		key: 'route',
-  		value: function route(connection) {
-  			this.pipeline.push(connection);
+  		value: function route(flow) {
+  			var that;
+
+  			if (flow.constructor === Object) {
+  				return this.fromData(flow);
+  			}
+
+  			if (that = this.getElement(flow)) {
+  				return this.fromElement(that);
+  			}
+
+  			this.pipeline.push(flow);
   		}
   	}, {
   		key: 'render',
@@ -387,6 +508,16 @@
   				return previous;
   			}.bind(this);
 
+  			var mutationParser = function (previous, current) {
+  				var response = current(previous);
+
+  				if (response !== undefined && response !== null) {
+  					return response;
+  				}
+
+  				return previous;
+  			}.bind(this);
+
   			var _iteratorNormalCompletion = true;
   			var _didIteratorError = false;
   			var _iteratorError = undefined;
@@ -395,76 +526,28 @@
   				var _loop = function _loop() {
   					var source = _step.value;
 
-  					var cloned = _this.element.cloneNode(true);
   					var parsed = _this.pipeline.reduce(parser, source);
+  					var cloned = _this.element.cloneNode(true);
+
   					var genetics = function genetics(input) {
   						return compile(input, parsed.source);
   					};
 
   					var parasite = new Parasite(genetics);
-  					var template = parasite.infect(cloned);
+
+  					if (parsed.compiled === undefined) {
+  						parasite.infect(cloned);
+  						parsed.compiled = parasite.infection;
+  					} else {
+  						parasite.infection = parsed.compiled;
+  					}
 
   					// reduce across mutators
 
-  					template.rendered = encoder(parsed.source);
-
-  					var _iteratorNormalCompletion2 = true;
-  					var _didIteratorError2 = false;
-  					var _iteratorError2 = undefined;
-
-  					try {
-  						for (var _iterator2 = _this.outputs[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-  							var output = _step2.value;
-  							var _iteratorNormalCompletion3 = true;
-  							var _didIteratorError3 = false;
-  							var _iteratorError3 = undefined;
-
-  							try {
-  								for (var _iterator3 = output.childNodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-  									var child = _step3.value;
-
-  									if (child.rendered === template.rendered) {
-  										rendered = output.replaceChild(template, child);
-  									}
-  								}
-  							} catch (err) {
-  								_didIteratorError3 = true;
-  								_iteratorError3 = err;
-  							} finally {
-  								try {
-  									if (!_iteratorNormalCompletion3 && _iterator3.return) {
-  										_iterator3.return();
-  									}
-  								} finally {
-  									if (_didIteratorError3) {
-  										throw _iteratorError3;
-  									}
-  								}
-  							}
-
-  							if (rendered === undefined) {
-  								output.appendChild(template);
-  							}
-  						}
-  					} catch (err) {
-  						_didIteratorError2 = true;
-  						_iteratorError2 = err;
-  					} finally {
-  						try {
-  							if (!_iteratorNormalCompletion2 && _iterator2.return) {
-  								_iterator2.return();
-  							}
-  						} finally {
-  							if (_didIteratorError2) {
-  								throw _iteratorError2;
-  							}
-  						}
-  					}
+  					_this.outputs.forEach(parasite.addChildren.bind(parasite));
   				};
 
   				for (var _iterator = this.sources[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-  					var rendered;
-
   					_loop();
   				}
   			} catch (err) {
@@ -485,18 +568,8 @@
   	}, {
   		key: 'pipe',
   		value: function pipe(flow) {
-  			if (flow.constructor === Object) {
-  				this.fromData(flow);
-  			} else if (flow instanceof Element) {
-  				this.fromElement(flow);
-  			} else if (flow instanceof String) {
-  				this.fromElement(this.getElement(flow));
-  			} else {
-  				this.route.apply(this, arguments);
-  			}
-
+  			this.route(flow);
   			this.render();
-
   			return this;
   		}
   	}, {

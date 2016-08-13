@@ -1,25 +1,63 @@
 // leeches off of the information...
+
+function not(a) {
+	return function() {
+		return !a.apply(this, arguments);
+	}
+}
+
+function equal(a) {
+	return function(b) {
+		return a === b;
+	}
+}
+
+function asArray(object) {
+	return Array.prototype.slice.call(object, 0);
+}
+
+
 export default class Parasite {
 	constructor(mutator) {
 		this.setMutator(mutator);
 	}
 
 	getChildren(element) {
-		return ([]).slice.call(element.childNodes, 0);
+		if (typeof element.content !== 'undefined') {
+			element = element.content;
+		}
+
+		return asArray(element.childNodes);
+	}
+
+	allChildren(element) {
+		var children;
+
+		children = this.getChildren(element);
+
+		for (let child of children) {
+			if (child instanceof Element) {
+				children = children.concat(allChildren(child));
+			} else {
+				children.push(child);
+			}
+		}
+
+		return children;
 	}
 
 	getAttributes(element) {
-		return ([]).slice.call(element.attributes, 0);
+		return asArray(element.attributes);
 	}
 
 	setChildren(element) {
 		let attributes = this.setAttributes(element);
 		let children = this.getChildren(element);
-		
+
 		for (let child of children) {
 			var result;
 
-			if (child.nodeType === document.TEXT_NODE) {
+			if (child.constructor === Text) {
 				if (child.textContent.trim().length > 0) {
 					result = this.mutator.apply(child, [
 						child.textContent,
@@ -29,7 +67,7 @@ export default class Parasite {
 				}
 			}
 
-			if (child.nodeType === document.ELEMENT_NODE) {
+			if (child instanceof Element) {
 				this.setChildren(child);
 			}
 
@@ -69,7 +107,26 @@ export default class Parasite {
 	}
 
 	infect(element) {
-		return this.setChildren(element);
+		element = this.setChildren(element);
+
+		this.infection = element;
+
+		return element;
+	}
+
+	addChildren(element) {
+		var infection;
+		var children;
+
+		children = this.getChildren(this.infection);
+
+		for (let child of children) {
+			if (!this.getChildren(element).some(equal(child))) {
+				element.appendChild(child);
+			}
+		}
+
+		return element;
 	}
 
 	setMutator(mutator) {

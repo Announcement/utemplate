@@ -1,25 +1,50 @@
 // transmutating elements =)
 export default class Alchemist {
-	static asElement(element) {
+	static fromQuerySelector(element) {
 		// find specified element
 		if (element.constructor === String) {
-			element = document.querySelector(element);
+			return document.querySelector(element) || element;
 		}
 
+		return element;
+	}
+
+	static fromSizzle(element) {
 		// it's a jQuery node
 		if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
-			element = element.get(0);
+			return element.get(0) || element;
 		}
 
+		return element;
+	}
+
+	static fromTemplate(element) {
 		// html5 template content
 		if (element instanceof Element && element.tagName === 'TEMPLATE') {
-			element = element.content;
+			return element.content || element;
 		}
 
+		return element;
+	}
+
+	static fromFragment(element) {
 		// defragment
 		if (element instanceof DocumentFragment && element.hasChildNodes()) {
-			element = element.firstElementChild;
+			return element.firstElementChild || element;
 		}
+
+		return element;
+	}
+
+	static asElement(element) {
+		element = ([
+			Alchemist.fromQuerySelector,
+			Alchemist.fromSizzle,
+			// Alchemist.fromTemplate,
+			Alchemist.fromFragment
+		]).reduce((previous, current) => {
+			return current(previous) || previous;
+		}, element);
 
 		// element is already provided
 		if (element instanceof Element) {
