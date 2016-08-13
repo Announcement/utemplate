@@ -4,7 +4,7 @@
   (global.Template = factory());
 }(this, function () { 'use strict';
 
-  var version = "2.2.0";
+  var version = "2.2.1";
 
   var classCallCheck = function (instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -583,6 +583,8 @@
 
   new Nudist(Parasite);
   new Nudist(Alchemist);
+
+  Nudist.expose(Nudist);
 
   return Template;
 
