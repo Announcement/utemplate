@@ -8,7 +8,7 @@ and
 [![dependencies](https://david-dm.org/Announcement/utemplate/status.svg)](https://david-dm.org/Announcement/utemplate?view=list)
 [![devDependencies](https://david-dm.org/Announcement/utemplate/dev-status.svg)](https://david-dm.org/Announcement/utemplate?type=dev&view=list)
 [![Build Status](https://travis-ci.org/Announcement/utemplate.svg?branch=master)](https://travis-ci.org/Announcement/utemplate)
-[![npm downloads](https://img.shields.io/npm/dt/express.svg?maxAge=2592000)]()
+[![npm downloads](https://img.shields.io/npm/dt/utemplate.svg?maxAge=2592000)]()
 
 Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.
 
