@@ -5,6 +5,8 @@ and
 [npm](https://www.npmjs.com/package/utemplate)
 
 [![npm version](https://badge.fury.io/js/utemplate.svg)](https://badge.fury.io/js/utemplate)
+[![dependencies](https://david-dm.org/Announcement/utemplate/status.svg)](https://david-dm.org/Announcement/utemplate?view=list)
+[![devDependencies](https://david-dm.org/Announcement/utemplate/dev-status.svg)](https://david-dm.org/Announcement/utemplate?type=dev&view=list)
 
 Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.
 
