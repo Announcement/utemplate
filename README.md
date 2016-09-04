@@ -36,10 +36,7 @@ We chose this location because if you don't have a `<head>` and `<body>` tags, m
 ~~~ html
 <template id="message">
   <article>
-    <header>
-      <h2>{title}</h2>
-      <time datetime="{published}"></time>
-    </header>
+    <h2>{title}</h2>
     <p>{message}</p>
   </article>
 </template>
@@ -57,26 +54,50 @@ This is where we're going to put it for all to see
 
 ### script
 
-~~~ javascript
-// string:querySelector, Elemental (see Alchemist)
-template = new Template("#message");
+First, let's generate a new *Template* from our previously defined element.
 
-// some sample data
+Note that this can use the following provided by **Alchemist**
+
+- [querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector)
+- [jQuery](https://jquery.com/) node
+- HTMLElement
+
+~~~ javascript
+template = new Template("#message");
+~~~
+
+Next, we need to provide some data.
+~~~ javascript
 data = {
   title: 'Hello, world!',
-  published: new Date(),
   message: 'How are you today?'
 };
 
 // prepare the template with some data
 template.pipe(data);
+~~~
 
+And decide what to do with it.
+~~~ javascript
 // attach it to the DOM (now via a querySelector)
 template.pipe('#messages');
-
-// friendly reminder that pipes are chainable
-// template.pipe(data).pipe(messages);
 ~~~
+
+### optional
+
+Of course, pipe is chainable :)
+
+~~~ javascript
+template.pipe(data).pipe(messages);
+~~~
+
+## to do list
+
+- More tests, (template doesn't have any)
+- Fix **Code Coverage**
+- Multidimensional indexing
+- Finish writing [jsdoc](http://usejsdoc.org/) scripts
+- Make a [gh-pages](//github.com/Announcement/utemplate/tree/gh-pages) branch
 
 ## frequently asked questions
 ### That's nice, but why is it useful?
@@ -100,3 +121,11 @@ As of version **utemplate@1.1.0** they can be multiple levels deep such as `{a: 
 If you enjoy reading and learning new things, then those will probably better for you. But if you want something small, fast and want it to just work, then microTemplates are for you.
 
 Ours is very small and easy to learn, so if you're a *beginner* (or a *minimalist* like myself), then you should **definately** start here.
+
+### How do you use only part of the library?
+
+Well, everything is *translated* but not *packaged* in `lib/` meaning you do not need to have [babel](https://babeljs.io/) or [traceur](https://github.com/google/traceur-compiler)
+
+You *will* need [rollup](http://rollupjs.org/), [browserify](http://browserify.org/), or [webpack](//webpack.github.io/) in order to use files with dependencies.
+
+The most common library you want is probably `parasite.js`, but that relies on `helpers.js` so you will need to build it. Helpers, on the other hand, is also very useful and has no dependencies and has many useful features. If you don't want to go through all of that though, you can use the default as it currently exports all of the important sublibraries.
