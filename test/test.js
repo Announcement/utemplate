@@ -5,7 +5,6 @@ import { version } from '../package.json'
 
 import Template from '../src/template'
 import Alchemist from '../src/alchemist'
-import Nudist from '../src/nudist'
 import Parasite from '../src/parasite'
 
 import * as Helpers from '../src/helpers'
@@ -33,12 +32,6 @@ context('Environment', function() {
 	describe('Parasite', function(){
 		it('expect to be available globally', function() {
 			expect(Parasite).to.exist;
-		});
-	});
-
-	describe('Nudist', function(){
-		it('expect to be available globally', function() {
-			expect(Nudist).to.exist;
 		});
 	});
 
