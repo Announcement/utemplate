@@ -1,7 +1,8 @@
 import { version } from '../package.json';
-import Alchemist from './alchemist.js';
-import Parasite from './parasite.js';
-import Nudist from './nudist.js';
+import Alchemist from './alchemist';
+import Parasite from './parasite';
+import Nudist from './nudist';
+import Pipeline from './pipeline'
 
 let query = (object, property) => {
 	let regexp = /[.{}]/g;
@@ -37,7 +38,7 @@ export default class Template {
 		this.setElement(element);
 	}
 
-	get version() {
+	static get version() {
 		return version;
 	}
 

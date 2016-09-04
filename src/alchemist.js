@@ -1,68 +1,64 @@
+import {is, as} from './helpers'
+
 // transmutating elements =)
 export default class Alchemist {
+	constructor(element) {
+		this.setElement(element);
+	}
+
 	static fromQuerySelector(element) {
 		// find specified element
-		if (element.constructor === String) {
-			return document.querySelector(element) || element;
+		if (typeof element === 'string') {
+			return document.querySelector(element);
 		}
-
-		return element;
 	}
 
 	static fromSizzle(element) {
 		// it's a jQuery node
-		if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
-			return element.get(0) || element;
+		// if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
+		if (typeof element.get === 'function') {
+			return element.get(0);
 		}
-
-		return element;
+		// }
 	}
 
 	static fromTemplate(element) {
 		// html5 template content
-		if (element instanceof Element && element.tagName === 'TEMPLATE') {
-			return element.content || element;
-		}
 
-		return element;
+		if (is.element(element)) {
+			return element.content;
+		}
 	}
 
 	static fromFragment(element) {
 		// defragment
-		if (element instanceof DocumentFragment && element.hasChildNodes()) {
-			return element.firstElementChild || element;
+		if (is.fragment(element) && element.hasChildNodes()) {
+			return element.firstElementChild;
 		}
-
-		return element;
 	}
 
 	static asElement(element) {
-		element = ([
-			Alchemist.fromQuerySelector,
-			Alchemist.fromSizzle,
-			// Alchemist.fromTemplate,
-			Alchemist.fromFragment
-		]).reduce((previous, current) => {
-			return current(previous) || previous;
-		}, element);
+		let waterfall = [
+				Alchemist.fromQuerySelector,
+				Alchemist.fromSizzle,
+				Alchemist.fromTemplate,
+				Alchemist.fromFragment
+		];
+
+		let result = as.decomposed(waterfall, element);
 
 		// element is already provided
-		if (element instanceof Element) {
-			return element;
+		if (result && is.element(result)) {
+			return result;
 		}
-
-		return error.invalidElement;
 	}
 
 	setElement(element) {
 		this.element = Alchemist.asElement(element);
+		return this;
 	}
 
 	getElement() {
 		return this.element;
-	}
-
-	constructor(element) {
-		this.setElement(element);
 	}
 }

@@ -1,21 +1,5 @@
 // leeches off of the information...
-
-function not(a) {
-	return function() {
-		return !a.apply(this, arguments);
-	}
-}
-
-function equal(a) {
-	return function(b) {
-		return a === b;
-	}
-}
-
-function asArray(object) {
-	return Array.prototype.slice.call(object, 0);
-}
-
+import {is, as} from './helpers'
 
 export default class Parasite {
 	constructor(mutator) {
@@ -23,41 +7,45 @@ export default class Parasite {
 	}
 
 	getChildren(element) {
+		// Extternal helpers::as.array
+
 		if (typeof element.content !== 'undefined') {
 			element = element.content;
 		}
 
-		return asArray(element.childNodes);
+		return as.array(element.childNodes);
 	}
 
 	allChildren(element) {
-		var children;
+		// External helpers::is.element helpers::as.flatten
+		// Dependencies: getChildren
 
-		children = this.getChildren(element);
+		let map = (function(child) {
+			return (!is.element(child)) ? child : this.allChildren(child);
+		}).bind(this);
 
-		for (let child of children) {
-			if (child instanceof Element) {
-				children = children.concat(allChildren(child));
-			} else {
-				children.push(child);
-			}
-		}
+		let children = this.getChildren(element).map(map);
 
-		return children;
+		return as.flatten(children);
 	}
 
 	getAttributes(element) {
-		return asArray(element.attributes);
+		// External helpers::as.array
+
+		return as.array(element.attributes);
 	}
 
 	setChildren(element) {
+		// External: helpers::is.element helpers::is.existant
+
 		let attributes = this.setAttributes(element);
 		let children = this.getChildren(element);
 
-		for (let child of children) {
+		for (let key in children) {
+			let child = children[key];
 			var result;
 
-			if (child.constructor === Text) {
+			if (is.text(child)) {
 				if (child.textContent.trim().length > 0) {
 					result = this.mutator.apply(child, [
 						child.textContent,
@@ -67,11 +55,11 @@ export default class Parasite {
 				}
 			}
 
-			if (child instanceof Element) {
+			if (is.element(child)) {
 				this.setChildren(child);
 			}
 
-			if (result !== undefined && result !== null) {
+			if (is.existant(result)) {
 				child.textContent = result;
 			}
 		};
@@ -80,9 +68,13 @@ export default class Parasite {
 	}
 
 	setAttributes(element) {
+		// External: helpers::is.existant
+		// Dependencies: getAttributes
+
 		let attributes = this.getAttributes(element);
 
-		for (let attribute of attributes) {
+		for (let index in attributes) {
+			let attribute = attributes[index];
 			var result;
 			var name;
 			var value;
@@ -98,7 +90,7 @@ export default class Parasite {
 				]);
 			}
 
-			if (result !== undefined && result !== null) {
+			if (is.existant(result)) {
 				element.setAttribute(attribute.name, result);
 			}
 		}
@@ -107,6 +99,8 @@ export default class Parasite {
 	}
 
 	infect(element) {
+		// Dependencies: setChildren
+
 		element = this.setChildren(element);
 
 		this.infection = element;
@@ -115,15 +109,19 @@ export default class Parasite {
 	}
 
 	addChildren(element) {
+		// External: helpers::is.not.equal
+		// Dependencies: getChildren
+
 		var infection;
 		var children;
+		var sibilings;
 
 		children = this.getChildren(this.infection);
+		sibilings = this.getChildren(element);
 
-		for (let child of children) {
-			if (!this.getChildren(element).some(equal(child))) {
-				element.appendChild(child);
-			}
+		for (let index in children) {
+			let child = children[index];
+			sibilings.every(it => is.not.equal(child, it)) && element.appendChild(child);
 		}
 
 		return element;
