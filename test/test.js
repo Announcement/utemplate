@@ -3,7 +3,7 @@ import blanket from 'blanket'
 
 import { version } from '../package.json'
 
-import Template from '../src/ntemplate'
+import Template from '../src/template'
 import Alchemist from '../src/alchemist'
 import Nudist from '../src/nudist'
 import Parasite from '../src/parasite'

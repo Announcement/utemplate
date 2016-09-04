@@ -2,7 +2,7 @@ import {should, expect} from 'chai'
 
 import { version } from '../package.json'
 
-import Template from '../src/ntemplate'
+import Template from '../src/template'
 
 context('Template', function() {
 	describe('constructor', function() {});
