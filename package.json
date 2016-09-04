@@ -2,7 +2,7 @@
   "name": "utemplate",
   "version": "2.2.3",
   "description": "Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.",
-  "main": "index.js",
+  "main": "bin/index.js",
   "scripts": {
     "test": "mocha",
     "postinstall": "",
@@ -51,6 +51,7 @@
     "rollup": "^0.34.7",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-buble": "^0.13.0",
-    "rollup-plugin-json": "^2.0.1"
+    "rollup-plugin-json": "^2.0.1",
+    "rollup-plugin-sourcemaps": "^0.3.7"
   }
 }

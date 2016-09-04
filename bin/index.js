@@ -581,32 +581,6 @@ var Parasite = function () {
 	return Parasite;
 }();
 
-// expert on exposure ;)
-var Nudist = function () {
-	createClass(Nudist, null, [{
-		key: 'expose',
-		value: function expose(input) {
-			if (typeof define === 'function') {
-				define(input);
-			}
-
-			[window, global].filter(function (it) {
-				return it;
-			}).forEach(function (it) {
-				it[input.name] = input;
-			});
-		}
-	}]);
-
-	function Nudist(program) {
-		classCallCheck(this, Nudist);
-
-		Nudist.expose(program);
-	}
-
-	return Nudist;
-}();
-
 var query = function query(object, property) {
 	var regexp = /[.{}]/g;
 	var filter = function filter(source) {
@@ -813,11 +787,7 @@ var Template = function () {
 	return Template;
 }();
 
-new Nudist(Parasite);
-new Nudist(Alchemist);
-
-Nudist.expose(Nudist);
-
 return Template;
 
 })));
+//# sourceMappingURL=index.js.map

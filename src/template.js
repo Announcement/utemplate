@@ -1,7 +1,6 @@
 import { version } from '../package.json';
 import Alchemist from './alchemist';
 import Parasite from './parasite';
-import Nudist from './nudist';
 
 let query = (object, property) => {
 	let regexp = /[.{}]/g;
@@ -163,8 +162,3 @@ export default class Template {
 		return this;
 	}
 }
-
-new Nudist(Parasite);
-new Nudist(Alchemist);
-
-Nudist.expose(Nudist);
