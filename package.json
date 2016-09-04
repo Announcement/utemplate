@@ -4,10 +4,9 @@
   "description": "Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.",
   "main": "index.js",
   "scripts": {
-    "pretest": "babel src -d lib",
-    "test": "babel-node ./node_modules/isparta/bin/isparta cover ./node_modules/mocha/bin/_mocha -- -R spec",
+    "test": "mocha",
     "postinstall": "",
-    "prepublish": "rollup -c"
+    "prepublish": "babel src -d lib && rollup -c"
   },
   "repository": {
     "type": "git",
