@@ -6,14 +6,8 @@ and
 
 [![NPM](https://nodei.co/npm/utemplate.png?compact=true)](https://nodei.co/npm/utemplate/)
 
-[![npm version](https://badge.fury.io/js/utemplate.svg)](https://badge.fury.io/js/utemplate)
-[![dependencies](https://david-dm.org/Announcement/utemplate/status.svg)](https://david-dm.org/Announcement/utemplate?view=list)
-[![devDependencies](https://david-dm.org/Announcement/utemplate/dev-status.svg)](https://david-dm.org/Announcement/utemplate?type=dev&view=list)
-[![Build Status](https://travis-ci.org/Announcement/utemplate.svg?branch=master)](https://travis-ci.org/Announcement/utemplate)
-
-[![npm downloads](https://img.shields.io/npm/dt/utemplate.svg?maxAge=2592000)]()
-
-Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.
+Templates are supported by default in HTML5,
+this is a single lightweight script to prepare them for you.
 
 1. Create your template, it won't be rendered
 2. Decide where it belongs
@@ -72,13 +66,10 @@ template = new Template("#message");
 
 Next, we need to provide some data.
 ~~~ javascript
-data = {
+template.pipe({
   title: 'Hello, world!',
   message: 'How are you today?'
-};
-
-// prepare the template with some data
-template.pipe(data);
+});
 ~~~
 
 And decide what to do with it.
@@ -87,23 +78,9 @@ And decide what to do with it.
 template.pipe('#messages');
 ~~~
 
-### optional
-
-Of course, pipe is chainable :)
-
-~~~ javascript
-template.pipe(data).pipe(messages);
-~~~
-
-## to do list
-
-- More tests, (template doesn't have any)
-- Fix **Code Coverage**
-- Multidimensional indexing
-- Finish writing [jsdoc](http://usejsdoc.org/) scripts
-- Make a [gh-pages](//github.com/Announcement/utemplate/tree/gh-pages) branch
 
 ## frequently asked questions
+
 ### That's nice, but why is it useful?
 
 In the real world, data is going to be from a source.
@@ -112,7 +89,6 @@ My environment has a couchdb document, but yours can be whatever you want it to 
 - avoid writing *html* inside of *javascript*
 - don't `document.createElement` or `document.createTextNode` by hand
 - no more writing stringified json to the document.
-
 
 ### Where does my data come from?
 
@@ -125,9 +101,3 @@ As of version **utemplate@1.1.0** they can be multiple levels deep such as `{a: 
 If you enjoy reading and learning new things, then those will probably better for you. But if you want something small, fast and want it to just work, then microTemplates are for you.
 
 Ours is very small and easy to learn, so if you're a *beginner* (or a *minimalist* like myself), then you should **definately** start here.
-
-### How do you use only part of the library?
-
-Well, everything is *translated* but not *packaged* in `lib/` meaning you do not need to have [babel](https://babeljs.io/) or [traceur](https://github.com/google/traceur-compiler)
-
-You *will* need [rollup](http://rollupjs.org/), [browserify](http://browserify.org/), or [webpack](//webpack.github.io/) in order to use files with dependencies.
