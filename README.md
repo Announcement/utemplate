@@ -4,10 +4,13 @@ Currently available on
 and
 [npm](https://www.npmjs.com/package/utemplate)
 
+[![NPM](https://nodei.co/npm/utemplate.png?compact=true)](https://nodei.co/npm/utemplate/)
+
 [![npm version](https://badge.fury.io/js/utemplate.svg)](https://badge.fury.io/js/utemplate)
 [![dependencies](https://david-dm.org/Announcement/utemplate/status.svg)](https://david-dm.org/Announcement/utemplate?view=list)
 [![devDependencies](https://david-dm.org/Announcement/utemplate/dev-status.svg)](https://david-dm.org/Announcement/utemplate?type=dev&view=list)
 [![Build Status](https://travis-ci.org/Announcement/utemplate.svg?branch=master)](https://travis-ci.org/Announcement/utemplate)
+
 [![npm downloads](https://img.shields.io/npm/dt/utemplate.svg?maxAge=2592000)]()
 
 Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.
@@ -128,5 +131,3 @@ Ours is very small and easy to learn, so if you're a *beginner* (or a *minimalis
 Well, everything is *translated* but not *packaged* in `lib/` meaning you do not need to have [babel](https://babeljs.io/) or [traceur](https://github.com/google/traceur-compiler)
 
 You *will* need [rollup](http://rollupjs.org/), [browserify](http://browserify.org/), or [webpack](//webpack.github.io/) in order to use files with dependencies.
-
-The most common library you want is probably `parasite.js`, but that relies on `helpers.js` so you will need to build it. Helpers, on the other hand, is also very useful and has no dependencies and has many useful features. If you don't want to go through all of that though, you can use the default as it currently exports all of the important sublibraries.
