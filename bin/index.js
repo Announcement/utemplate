@@ -4,7 +4,7 @@
   (global.Template = factory());
 }(this, (function () { 'use strict';
 
-var version = "2.2.3";
+var version = "2.2.4";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
