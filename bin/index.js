@@ -4,7 +4,7 @@
   (global.Template = factory());
 }(this, (function () { 'use strict';
 
-var version = "2.2.4";
+var version = "2.2.5";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -425,7 +425,9 @@ var Alchemist = function () {
 	}, {
 		key: 'asElement',
 		value: function asElement(element) {
-			var waterfall = [Alchemist.fromQuerySelector, Alchemist.fromSizzle, Alchemist.fromTemplate, Alchemist.fromFragment];
+			var waterfall = [Alchemist.fromQuerySelector, Alchemist.fromSizzle,
+			// Alchemist.fromTemplate,
+			Alchemist.fromFragment];
 
 			var result = as.decomposed(waterfall, element);
 
