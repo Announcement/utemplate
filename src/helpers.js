@@ -121,7 +121,7 @@ function flatten(array) {
 	var isArray;
 	var toArray;
 	var fromArray;
-	
+
 	isArray = it => it.constructor === Array;
 	toArray = it => isArray(it) ? it : [it];
 	fromArray = (a, b) => a.concat(b);

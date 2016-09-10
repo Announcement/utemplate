@@ -596,7 +596,7 @@ var query = function query(object, property) {
 var compile = function compile(value, data) {
 	var regexp = /\{([^}]+)\}/g;
 	var replacement = function replacement(original, property) {
-		return query(data, property);
+		return query(data, property) || '';
 	};
 
 	return value.trim().replace(regexp, replacement);

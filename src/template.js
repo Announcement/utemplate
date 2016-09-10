@@ -16,7 +16,7 @@ let query = (object, property) => {
 let compile = (value, data) => {
 	let regexp = /\{([^}]+)\}/g;
 	let replacement = (original, property) => {
-		return query(data, property);
+		return query(data, property) || '';
 	};
 
 	return value
