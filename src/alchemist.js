@@ -41,7 +41,7 @@ export default class Alchemist {
 		let waterfall = [
 				Alchemist.fromQuerySelector,
 				Alchemist.fromSizzle,
-				Alchemist.fromTemplate,
+				// Alchemist.fromTemplate,
 				Alchemist.fromFragment
 		];
 
