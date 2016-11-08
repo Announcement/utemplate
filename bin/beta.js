@@ -1,7 +1,7 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global.Template = factory());
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.Template = factory());
 }(this, (function () { 'use strict';
 
 var version = "2.2.5";
@@ -11,6 +11,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 } : function (obj) {
   return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
 };
+
+
+
+
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -35,6 +39,75 @@ var createClass = function () {
     return Constructor;
   };
 }();
+
+
+
+
+
+
+
+var get$1 = function get$1(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get$1(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
+    }
+
+    return getter.call(receiver);
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var set = function set(object, property, value, receiver) {
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent !== null) {
+      set(parent, property, value, receiver);
+    }
+  } else if ("value" in desc && desc.writable) {
+    desc.value = value;
+  } else {
+    var setter = desc.set;
+
+    if (setter !== undefined) {
+      setter.call(receiver, value);
+    }
+  }
+
+  return value;
+};
 
 /** @module helpers */
 
@@ -159,13 +232,13 @@ var has = curry$(function (object, property) {
  */
 function flatten(array) {
   var isArray;
-  var toArray;
+  var toArray$$1;
   var fromArray;
 
   isArray = function isArray(it) {
     return it.constructor === Array;
   };
-  toArray = function toArray(it) {
+  toArray$$1 = function toArray$$1(it) {
     return isArray(it) ? it : [it];
   };
   fromArray = function fromArray(a, b) {
@@ -173,7 +246,7 @@ function flatten(array) {
   };
 
   while (array.some(isArray)) {
-    array = array.map(toArray).reduce(fromArray);
+    array = array.map(toArray$$1).reduce(fromArray);
   }
 
   return array;
@@ -281,7 +354,7 @@ function inject(it, transform) {
   }
 
   return copy;
-};
+}
 
 /**
  * Prepares a collection of functions for shipping by currying and adding a not chain
@@ -505,7 +578,7 @@ var Parasite = function () {
 				if (is.existant(result)) {
 					child.textContent = result;
 				}
-			};
+			}
 
 			return element;
 		}
@@ -572,7 +645,7 @@ var Parasite = function () {
 				_loop(index);
 			}
 
-			return element;
+			return children;
 		}
 	}, {
 		key: 'setMutator',
@@ -583,159 +656,237 @@ var Parasite = function () {
 	return Parasite;
 }();
 
-// what we're actually dealing with.
+var query = function query(object, property) {
+  var regexp = /[.{}]/g;
+  var filter = function filter(source) {
+    return source;
+  };
+  var reduce = function reduce(source, key) {
+    return source[key];
+  };
 
-var Template = function () {
-	function Template(element) {
-		classCallCheck(this, Template);
+  return property.split(regexp).filter(filter).reduce(reduce, object);
+};
 
-		this.pipeline = [];
-		this.mutators = [];
+var compile = function compile(value, data) {
+  var regexp = /\{([^}]+)\}/g;
 
-		this.sources = [];
-		this.outputs = [];
+  var replacement = function replacement(original, property) {
+    return query(data, property) || '';
+  };
 
-		this.setElement(element);
-	}
+  return value.trim().replace(regexp, replacement);
+};
 
-	createClass(Template, [{
-		key: 'getElement',
-		value: function getElement(element) {
-			if (typeof Alchemist !== 'undefined') {
-				element = Alchemist.asElement(element);
-			}
+var genetics = function genetics(source) {
+  return function (input) {
+    return compile(input, source);
+  };
+};
 
-			return element;
-		}
-	}, {
-		key: 'setElement',
-		value: function setElement(element) {
-			element = this.getElement(element);
+var Milli$1 = function () {
+  function Milli(source) {
+    classCallCheck(this, Milli);
 
-			this.element = element;
+    this.source = Alchemist.asElement(source);
+    this.methods = [];
+    this.sources = [];
+  }
 
-			return element;
-		}
-	}, {
-		key: 'fromEventSource',
-		value: function fromEventSource(source) {
-			// on 'data', <pipe>
-		}
-	}, {
-		key: 'fromPromise',
-		value: function fromPromise(action) {
-			// then <pipe>
-		}
-	}, {
-		key: 'fromEvent',
-		value: function fromEvent(action) {
-			// addEventListener 'click', <pipe>
-		}
-	}, {
-		key: 'fromData',
-		value: function fromData(data) {
-			var tracker;
+  createClass(Milli, [{
+    key: 'setMutations',
+    value: function setMutations(source) {
+      var methods;
 
-			tracker = {};
-			tracker.source = data;
-			tracker.passed = [];
+      methods = this.methods;
+    }
+  }, {
+    key: 'setSources',
+    value: function setSources(method) {
+      var sources;
 
-			this.sources.push(tracker);
+      sources = this.sources.map(method);
 
-			return tracker;
-		}
-	}, {
-		key: 'fromHandler',
-		value: function fromHandler(handler) {
-			// <pipe> addEventListener, 'click'
-		}
-	}, {
-		key: 'fromMutator',
-		value: function fromMutator(mutator) {
-			// element level transformations
-		}
-	}, {
-		key: 'fromElement',
-		value: function fromElement(element) {
-			this.outputs.push(element);
-		}
-	}, {
-		key: 'route',
-		value: function route(flow) {
-			var that;
+      this.sources = sources;
+    }
+  }, {
+    key: 'setContent',
+    value: function setContent() {
+      var output;
 
-			if (flow.constructor === Object) {
-				return this.fromData(flow);
-			}
+      output = this.output;
 
-			if (that = this.getElement(flow)) {
-				return this.fromElement(that);
-			}
+      if (is.not.existant(output)) {
+        return false;
+      }
 
-			this.pipeline.push(flow);
-		}
-	}, {
-		key: 'prepare',
-		value: function prepare(packet) {}
-	}, {
-		key: 'render',
-		value: function render() {
-			var grid;
-			/*
-   let parser = ((previous, current) => {
-   	if (previous.passed.indexOf(current) !== -1) {
-   		return previous;
-   	}
-   			let response = current.call(previous, previous.source);
-   			previous.passed.push(current);
-   			if (response !== undefined && response !== null) {
-   		previous.source = response;
-   	}
-   			return previous;
-   }).bind(this);
-   		let mutationParser = ((previous, current) => {
-   	let response = current(previous);
-   			if (response !== undefined && response !== null) {
-   		return response;
-   	}
-   			return previous;
-   }).bind(this);
-   		for (let source of this.sources) {
-   	let parsed = this.pipeline.reduce(parser, source);
-   	let cloned = this.element.cloneNode(true);
-   			let genetics = ((input) => {
-   		return compile(input, parsed.source);
-   	});
-   			let parasite = new Parasite(genetics);
-   			if (parsed.compiled === undefined) {
-   		parasite.infect(cloned);
-   		parsed.compiled = parasite.infection;
-   	} else {
-   		parasite.infection = parsed.compiled;
-   	}
-   			// reduce across mutators
-   			this.outputs.forEach(parasite.addChildren.bind(parasite));
-   }
-   */
-		}
-	}, {
-		key: 'pipe',
-		value: function pipe(flow) {
+      this.setSources(function (source) {
+        if (is.existant(source.children)) {
+          return source;
+        }
 
-			this.route(flow);
-			this.render();
-			return this;
-		}
-	}], [{
-		key: 'version',
-		get: function get() {
-			return version;
-		}
-	}]);
-	return Template;
+        var parasite;
+        var compiled;
+        var children;
+
+        parasite = source.parasite;
+        compiled = source.compiled;
+
+        children = parasite.addChildren(output);
+        source.children = children;
+
+        return source;
+      });
+    }
+  }, {
+    key: 'getContent',
+    value: function getContent() {
+      var template;
+      var methods;
+
+      template = this.source;
+      methods = this.methods;
+
+      var isInfected = function isInfected(it) {
+        var content;
+
+        content = it.parsed || it.content;
+
+        if (is.not.existant(it.parasite)) {
+          it.parasite = new Parasite(genetics(content));
+        }
+
+        return it.parasite;
+      };
+
+      var isCompiled = function isCompiled(it) {
+        if (is.not.existant(it.compiled)) {
+          var cloned = template.cloneNode(true);
+          var element = it.parasite.infect(cloned);
+        }
+
+        return it.compiled;
+      };
+
+      var eachMutation = function eachMutation(it) {
+        var result;
+
+        result = methods.reduce(function (previous, current, index) {
+          var rendered = current(previous);
+
+          it.mutations[index] = rendered;
+
+          return rendered || previous;
+        }, it.content);
+
+        it.parsed = result;
+
+        return result;
+      };
+
+      var isMutation = function isMutation(it) {
+        if (is.not.existant(it.mutations)) {
+          it.mutations = [];
+        }
+
+        // console.log(it.mutations, methods);
+
+        if (it.mutations.length < methods.length) {
+          eachMutation(it);
+        }
+
+        return it.mutations;
+      };
+
+      this.setSources(function (source) {
+        var mutation = isMutation(source);
+        var infected = isInfected(source);
+        var compiled = isCompiled(source);
+
+        return source;
+      });
+    }
+  }, {
+    key: 'setDestination',
+    value: function setDestination(it) {
+      var element;
+
+      element = Alchemist.asElement(it);
+
+      if (is.not.existant(element)) {
+        return false;
+      }
+
+      this.output = element;
+
+      if (this.sources.length > 0) {
+        this.setContent();
+      }
+
+      return element;
+    }
+  }, {
+    key: 'fromObject',
+    value: function fromObject(it) {
+      var packet;
+
+      packet = {};
+
+      if (it.constructor !== Object) {
+        return false;
+      }
+
+      packet.content = it;
+
+      this.sources.push(packet);
+
+      this.getContent();
+      this.setContent();
+
+      return it;
+    }
+  }, {
+    key: 'fromMethod',
+    value: function fromMethod(it) {
+      if (it.constructor !== Function) {
+        return false;
+      }
+
+      this.getContent();
+
+      this.methods.push(it);
+
+      return it;
+    }
+  }, {
+    key: 'pipe',
+    value: function pipe(object) {
+      var _this = this;
+
+      var waterfall;
+      var result;
+
+      waterfall = [this.setDestination, this.fromObject, this.fromMethod];
+
+      waterfall.some(function (method) {
+        return result = method.call(_this, object);
+      });
+
+      // console.log(result);
+      // console.log(this.sources);
+
+      return this;
+    }
+  }], [{
+    key: 'version',
+    get: function get() {
+      return version;
+    }
+  }]);
+  return Milli;
 }();
 
-return Template;
+return Milli$1;
 
 })));
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=beta.js.map

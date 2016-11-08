@@ -124,7 +124,7 @@ export default class Parasite {
 			sibilings.every(it => is.not.equal(child, it)) && element.appendChild(child);
 		}
 
-		return element;
+		return children;
 	}
 
 	setMutator(mutator) {

@@ -23,5 +23,5 @@ export default {
       "plugins": ["external-helpers"]
     })
   ],
-  dest: 'bin/index.js'
+  dest: 'bin/beta.js'
 };
