@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Utemplate by Announcement</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Utemplate</h1>
+        <p>Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.</p>
+
+        <p class="view"><a href="https://github.com/Announcement/utemplate">View the Project on GitHub <small>Announcement/utemplate</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/Announcement/utemplate/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/Announcement/utemplate/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/Announcement/utemplate">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="µtemplate" class="anchor" href="#%C2%B5template" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>µtemplate</h1>
+
+<p>Currently available on
+<a href="https://github.com/Announcement/utemplate">github</a>
+and
+<a href="https://www.npmjs.com/package/utemplate">npm</a></p>
+
+<p><a href="https://nodei.co/npm/utemplate/"><img src="https://nodei.co/npm/utemplate.png?compact=true" alt="NPM"></a></p>
+
+<p>Templates are supported by default in HTML5,
+this is a single lightweight script to prepare them for you.</p>
+
+<ol>
+<li>Create your template, it won't be rendered</li>
+<li>Decide where it belongs</li>
+<li>Prepare the template with some data</li>
+<li>Insert the prepared template into the DOM</li>
+</ol>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>install</h2>
+
+<h3>
+<a id="npm" class="anchor" href="#npm" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>npm</h3>
+
+<p><code>npm i --save utemplate</code></p>
+
+<h3>
+<a id="git" class="anchor" href="#git" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>git</h3>
+
+<p><code>git clone git@github.com:Announcement/utemplate.git</code></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>usage</h2>
+
+<h3>
+<a id="head" class="anchor" href="#head" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>head</h3>
+
+<p>It doesn't <em>have</em> to be in the head, put it wherever you want, just make sure it's loaded before the script is run.
+We chose this location because if you don't have a <code>&lt;head&gt;</code> and <code>&lt;body&gt;</code> tags, most parsers throw the <code>&lt;template&gt;</code> in there by default.</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">template</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>message<span class="pl-pds">"</span></span>&gt;
+  &lt;<span class="pl-ent">article</span>&gt;
+    &lt;<span class="pl-ent">h2</span>&gt;{title}&lt;/<span class="pl-ent">h2</span>&gt;
+    &lt;<span class="pl-ent">p</span>&gt;{message}&lt;/<span class="pl-ent">p</span>&gt;
+  &lt;/<span class="pl-ent">article</span>&gt;
+&lt;/<span class="pl-ent">template</span>&gt;</pre></div>
+
+<h3>
+<a id="body" class="anchor" href="#body" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>body</h3>
+
+<p>This is where we're going to put it for all to see</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">section</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>messages<span class="pl-pds">"</span></span>&gt;
+&lt;/<span class="pl-ent">section</span>&gt;</pre></div>
+
+<h3>
+<a id="script" class="anchor" href="#script" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>script</h3>
+
+<p>First, let's generate a new <em>Template</em> from our previously defined element.</p>
+
+<p>Note that this can use the following provided by <strong>Alchemist</strong></p>
+
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector">querySelector</a></li>
+<li>
+<a href="https://jquery.com/">jQuery</a> node</li>
+<li>HTMLElement</li>
+</ul>
+
+<div class="highlight highlight-source-js"><pre>template <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Template</span>(<span class="pl-s"><span class="pl-pds">"</span>#message<span class="pl-pds">"</span></span>);</pre></div>
+
+<p>Next, we need to provide some data.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">template</span>.<span class="pl-en">pipe</span>({
+  title<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Hello, world!<span class="pl-pds">'</span></span>,
+  message<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>How are you today?<span class="pl-pds">'</span></span>
+});</pre></div>
+
+<p>And decide what to do with it.</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// attach it to the DOM (now via a querySelector)</span>
+<span class="pl-smi">template</span>.<span class="pl-en">pipe</span>(<span class="pl-s"><span class="pl-pds">'</span>#messages<span class="pl-pds">'</span></span>);</pre></div>
+
+<h2>
+<a id="frequently-asked-questions" class="anchor" href="#frequently-asked-questions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>frequently asked questions</h2>
+
+<h3>
+<a id="thats-nice-but-why-is-it-useful" class="anchor" href="#thats-nice-but-why-is-it-useful" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>That's nice, but why is it useful?</h3>
+
+<p>In the real world, data is going to be from a source.
+My environment has a couchdb document, but yours can be whatever you want it to be</p>
+
+<ul>
+<li>avoid writing <em>html</em> inside of <em>javascript</em>
+</li>
+<li>don't <code>document.createElement</code> or <code>document.createTextNode</code> by hand</li>
+<li>no more writing stringified json to the document.</li>
+</ul>
+
+<h3>
+<a id="where-does-my-data-come-from" class="anchor" href="#where-does-my-data-come-from" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Where does my data come from?</h3>
+
+<p>The properties directly correspond to the text inside of the template and are automatically filled with those keys.</p>
+
+<p>As of version <strong>utemplate@1.1.0</strong> they can be multiple levels deep such as <code>{a: {b: {c: 'd'}}}</code> and the template requests <code>{a.b.c}</code></p>
+
+<h3>
+<a id="why-wouldnt-i-use-angular-meteor-or-something-better" class="anchor" href="#why-wouldnt-i-use-angular-meteor-or-something-better" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why wouldn't I use Angular, Meteor, or something <em>better</em>
+</h3>
+
+<p>If you enjoy reading and learning new things, then those will probably better for you. But if you want something small, fast and want it to just work, then microTemplates are for you.</p>
+
+<p>Ours is very small and easy to learn, so if you're a <em>beginner</em> (or a <em>minimalist</em> like myself), then you should <strong>definately</strong> start here.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/Announcement">Announcement</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
