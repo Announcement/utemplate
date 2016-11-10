@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">77.52</p>
+      <p class="stat">79.43</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">86</p>
+      <p class="stat">93</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">23.07</p>
+      <p class="stat">25.00</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.46</p>
+      <p class="stat">0.52</p>
     </div>
   </div>
 </div>
@@ -93,86 +93,93 @@
 import Parasite from &#039;./parasite&#039;;
 
 let query = (object, property) =&gt; {
-	let regexp = /[.{}]/g;
-	let filter = (source) =&gt; { return source; };
-	let reduce = (source, key) =&gt; { return source[key]; };
+  let regexp = /[.{}]/g;
+  let filter = (source) =&gt; {
+    return source;
+  };
+  let reduce = (source, key) =&gt; {
+    return source[key];
+  };
 
-	return property
-	.split(regexp)
-	.filter(filter)
-	.reduce(reduce, object);
+  return property
+  .split(regexp)
+  .filter(filter)
+  .reduce(reduce, object);
 };
 
 let compile = (value, data) =&gt; {
-	let regexp = /\{([^}]+)\}/g;
+  let regexp = /\{([^}]+)\}/g;
 
-	let replacement = (original, property) =&gt; {
-		return query(data, property) || &#039;&#039;;
-	};
+  let replacement = (original, property) =&gt; {
+    return query(data, property) || &#039;&#039;;
+  };
 
-	return value
-	.trim()
-	.replace(regexp, replacement);
+  return value
+  .trim()
+  .replace(regexp, replacement);
 };
 
 let genetics = function(source) {
-	return input =&gt; compile(input, source);
+  return (input) =&gt; compile(input, source);
 };
 
 export default class nano {
-	constructor(element) {
-		this.rendered = [];
+  constructor(element) {
+    this.rendered = [];
 
-		this.setTemplate(element);
-	}
+    this.setTemplate(element);
+  }
 
-	setTemplate(it) {
-		var element;
+  setTemplate(it) {
+    let element;
 
-		element = Alchemist.asElement(it);
-		this.template = element;
+    element = Alchemist.asElement(it);
+    this.template = element;
 
-		return element;
-	}
+    return element;
+  }
 
-	getTemplate() {
-		return this.template;
-	}
+  getTemplate() {
+    return this.template;
+  }
 
-	fromObject(object) {
-		var template;
-		var cloned;
-		var parasite;
-		var element;
-		var packet;
+  fromObject(object) {
+    let template;
+    let cloned;
+    let parasite;
+    let element;
+    let packet;
+    
+    template = this.getTemplate();
+    cloned = template.cloneNode(true);
+    parasite = new Parasite(genetics(object));
 
-		template = this.getTemplate();
-		cloned = template.cloneNode(true);
-		parasite = new Parasite(genetics(object));
+    element = parasite.infect(cloned);
 
-		element = parasite.infect(cloned);
+    packet = {
+      &#039;object&#039;: object,
+      &#039;element&#039;: element,
+      &#039;parasite&#039;: parasite,
+    };
 
-		packet = {
-			&#039;object&#039;: object,
-			&#039;element&#039;: element,
-			&#039;parasite&#039;: parasite
-		};
+    this.rendered.push(packet);
 
-		this.rendered.push(packet);
+    return element;
+  }
 
-		return element;
-	}
+  setOutput(it) {
+    let element;
 
-	setOutput(it) {
-		var element;
-		var that;
+    element = Alchemist.asElement(it);
 
-		element = Alchemist.asElement(it);
+    let isEmpty = (it) =&gt; this.rendered.length === 0;
+    let addChildren = (it) =&gt; it.parasite.addChildren(element);
+    let fromRendered = (it) =&gt; this.rendered.shift();
 
-		while (that = this.rendered.shift()) {
-			that.parasite.addChildren(element);
-		}
-	}
+    while (!isEmpty()) {
+      addChildren(fromRendered());
+    }
+  }
 
 }</textarea>
   </div>

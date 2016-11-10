@@ -44,7 +44,7 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">75.29</p>
+      <p class="stat">75.32</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
@@ -62,7 +62,7 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">41.43</p>
+      <p class="stat">39.63</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
@@ -89,14 +89,14 @@
 
 <div class="container">
   <div class="row">
-    <textarea id="file-source" class="col-md-12">import { version } from &#039;../package.json&#039;;
+    <textarea id="file-source" class="col-md-12">import {version} from &#039;../package.json&#039;;
 import Alchemist from &#039;./alchemist&#039;;
 import Parasite from &#039;./parasite&#039;;
 import {is, as} from &#039;./helpers&#039;;
-//getDatBooty6
+
 let query = (object, property) =&gt; {
 	let regexp = /[.{}]/g;
-	let filter = source =&gt; source;
+	let filter = (source) =&gt; source;
 	let reduce = (source, key) =&gt; source[key];
 
 	return property
@@ -118,7 +118,7 @@ let compile = (value, data) =&gt; {
 };
 
 let genetics = function(source) {
-	return input =&gt; compile(input, source);
+	return (input) =&gt; compile(input, source);
 };
 
 export default class Milli {
@@ -134,13 +134,13 @@ export default class Milli {
   }
 
   setMutations(source) {
-    var methods;
+    let methods;
 
     methods = this.methods;
   }
 
   setSources(method) {
-    var sources;
+    let sources;
 
     sources = this.sources.map(method);
 
@@ -148,7 +148,7 @@ export default class Milli {
   }
 
   provide() {
-    var output;
+    let output;
 
     output = this.output;
 
@@ -156,14 +156,14 @@ export default class Milli {
       return false;
     }
 
-    this.setSources(source =&gt; {
+    this.setSources((source) =&gt; {
       if (is.existant(source.children)) {
         return source;
       }
 
-      var parasite;
-      var compiled;
-      var children;
+      let parasite;
+      let compiled;
+      let children;
 
       parasite = source.parasite;
       compiled = source.compiled;
@@ -176,13 +176,13 @@ export default class Milli {
   }
 
   generate() {
-    var template;
-    var methods;
+    let template;
+    let methods;
 
     template = this.source;
     methods = this.methods;
 
-    let isInfected = it =&gt; {
+    let isInfected = (it) =&gt; {
       let content = it.parsed || it.content;
 
       if (is.not.existant(it.parasite)) {
@@ -192,7 +192,7 @@ export default class Milli {
       return it.parasite;
     };
 
-    let isCompiled = it =&gt; {
+    let isCompiled = (it) =&gt; {
       if (is.not.existant(it.compiled)) {
         let cloned = template.cloneNode(true);
         let element = it.parasite.infect(cloned);
@@ -201,11 +201,11 @@ export default class Milli {
       return it.compiled;
     };
 
-    let eachMutation = it =&gt; {
-      var result;
+    let eachMutation = (it) =&gt; {
+      let result;
 
       result = methods.reduce(function(previous, current, index) {
-        var rendered;
+        let rendered;
 
 				rendered = current(previous);
         it.mutations[index] = rendered;
@@ -218,7 +218,7 @@ export default class Milli {
       return result;
     };
 
-    let isMutation = it =&gt; {
+    let isMutation = (it) =&gt; {
       if (is.not.existant(it.mutations)) {
         it.mutations = [];
       }
@@ -230,7 +230,7 @@ export default class Milli {
       return it.mutations;
     };
 
-    this.setSources(source =&gt; {
+    this.setSources((source) =&gt; {
       let mutation = isMutation(source);
       let infected = isInfected(source);
       let compiled = isCompiled(source);
@@ -240,7 +240,7 @@ export default class Milli {
   }
 
   setDestination(it) {
-    var element;
+    let element;
 
     element = Alchemist.asElement(it);
 
@@ -258,7 +258,7 @@ export default class Milli {
   }
 
   fromObject(it) {
-    var packet;
+    let packet;
 
     if (it.constructor !== Object) {
       return false;
@@ -287,16 +287,16 @@ export default class Milli {
   }
 
   pipe(object) {
-    var waterfall;
-    var result;
+    let waterfall;
+    let result;
 
     waterfall = [
       this.setDestination,
       this.fromObject,
-      this.fromMethod
+      this.fromMethod,
     ];
 
-    waterfall.some(method =&gt; result = method.call(this, object));
+    waterfall.some((method) =&gt; result = method.call(this, object));
 
     return this;
   }

@@ -4,11 +4,11 @@ import Parasite from './parasite';
 let query = (object, property) => {
   let regexp = /[.{}]/g;
   let filter = (source) => {
- return source;
-};
+    return source;
+  };
   let reduce = (source, key) => {
- return source[key];
-};
+    return source[key];
+  };
 
   return property
   .split(regexp)

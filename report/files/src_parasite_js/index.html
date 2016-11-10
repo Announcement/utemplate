@@ -44,7 +44,7 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">70.91</p>
+      <p class="stat">71.11</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">43.07</p>
+      <p class="stat">41.20</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">0.74</p>
+      <p class="stat">0.73</p>
     </div>
   </div>
 </div>
@@ -90,7 +90,7 @@
 <div class="container">
   <div class="row">
     <textarea id="file-source" class="col-md-12">// leeches off of the information...
-import {is, as} from &#039;./helpers&#039;
+import {is, as} from &#039;./helpers&#039;;
 
 export default class Parasite {
 	constructor(mutator) {
@@ -134,14 +134,14 @@ export default class Parasite {
 
 		for (let key in children) {
 			let child = children[key];
-			var result;
+			let result;
 
 			if (is.text(child)) {
 				if (child.textContent.trim().length &gt; 0) {
 					result = this.mutator.apply(child, [
 						child.textContent,
 						arguments[1],
-						children
+						children,
 					]);
 				}
 			}
@@ -166,9 +166,9 @@ export default class Parasite {
 
 		for (let index in attributes) {
 			let attribute = attributes[index];
-			var result;
-			var name;
-			var value;
+			let result;
+			let name;
+			let value;
 
 			name = attribute.name;
 			value = attribute.value;
@@ -177,7 +177,7 @@ export default class Parasite {
 				result = this.mutator.apply(element, [
 					attribute.value,
 					attribute.name,
-					attributes
+					attributes,
 				]);
 			}
 
@@ -203,16 +203,16 @@ export default class Parasite {
 		// External: helpers::is.not.equal
 		// Dependencies: getChildren
 
-		var infection;
-		var children;
-		var sibilings;
+		let infection;
+		let children;
+		let sibilings;
 
 		children = this.getChildren(this.infection);
 		sibilings = this.getChildren(element);
 
 		for (let index in children) {
 			let child = children[index];
-			sibilings.every(it =&gt; is.not.equal(child, it)) &amp;&amp; element.appendChild(child);
+			sibilings.every((it) =&gt; is.not.equal(child, it)) &amp;&amp; element.appendChild(child);
 		}
 
 		return children;

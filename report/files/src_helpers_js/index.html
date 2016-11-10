@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">79.03</p>
+      <p class="stat">80.34</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">338</p>
+      <p class="stat">404</p>
     </div>
   </div>
   <div class="row historical">
@@ -62,11 +62,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
-      <p class="stat">45.90</p>
+      <p class="stat">52.57</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
-      <p class="stat">1.32</p>
+      <p class="stat">1.61</p>
     </div>
   </div>
 </div>
@@ -97,11 +97,11 @@
  *
  * @param {Object} it - Array like object
  *
- * @return {Array}
+ * @return {Array} - implicit array object
  */
-var array$ = function (it) {
+let array$ = function(it) {
 	return Array.prototype.slice.call(it, 0);
-}
+};
 
 /**
  * Appends values to an Array,
@@ -112,10 +112,10 @@ var array$ = function (it) {
  * @param {Array} array - list of existing items
  * @param {Array} values - proposed additions to the lsit
  *
- * @return {Array}
+ * @return {Array} - collective array
  */
 function combine(array, values) {
-	var index;
+	let index;
 
 	array = array.concat([]);
 
@@ -127,29 +127,40 @@ function combine(array, values) {
 }
 
 /**
- * Returns a modified function that can be called with currying
+ * Returns a modified function with lazy option assocations
  *
  * @function curry
  *
- * @see array$
- *
  * @param {Function} method - function to be curried
  *
- * @return {Function}
+ * @return {Function} curried functions
  */
 function curry$(method) {
+  /**
+  * Generated method through currying, allowing chainibility
+  * @function transform
+  *
+  * @see combine
+  * @this
+  *
+  * @param {Array} params - arguments array
+  *
+  * @return {Object} piped output from source curry method
+  */
 	function transform(params) {
-		var context;
-		return function() {
-			var args = combine(params, array$(arguments));
+		let context;
+
+		return function(...input) {
+			let args = combine(params, array$(arguments));
+
 			context = context || this;
 
-			if (args.length &lt; method.length || args.some(it =&gt; it === undefined )) {
+			if (args.length &lt; method.length || args.some((it) =&gt; it === undefined )) {
 				return transform(args);
 			} else {
 				return method.apply(context, args);
 			}
-		}
+		};
 	}
 	return method.length &lt;= 1 ? method : transform([]);
 }
@@ -209,12 +220,12 @@ let has = curry$((object, property) =&gt; {
  * @return Array
  */
 function flatten(array) {
-	var isArray;
-	var toArray;
-	var fromArray;
+	let isArray;
+	let toArray;
+	let fromArray;
 
-	isArray = it =&gt; it.constructor === Array;
-	toArray = it =&gt; isArray(it) ? it : [it];
+	isArray = (it) =&gt; it.constructor === Array;
+	toArray = (it) =&gt; isArray(it) ? it : [it];
 	fromArray = (a, b) =&gt; a.concat(b);
 
 	while (array.some(isArray)) {
@@ -251,13 +262,13 @@ function equals(reference, object) {
 
 	return flatten([
 		pair(reference),
-		pair(object)
+		pair(object),
 	])
 	.every((item) =&gt; {
-		return
+		return;
 		has(reference)(item.key) &amp;&amp;
 		has(object)(item.key) &amp;&amp;
-		equals(reference[item.key], object[item.key])
+		equals(reference[item.key], object[item.key]);
 	});
 }
 /**
@@ -285,9 +296,9 @@ function exists(it) {
  * @return {Object}
  */
 function attempt(mutation, subject) {
-	var parameters;
-	var alternative;
-	var response;
+	let parameters;
+	let alternative;
+	let response;
 
 	parameters = array$(arguments).slice(1);
 	alternative = parameters.length === 1 ? parameters[0] : parameters;
@@ -323,7 +334,7 @@ function clone(object) {
  * @return {Object.&lt;string, Function&gt;}
  */
 function inject(it, transform) {
-	var copy = {};
+	let copy = {};
 
 	function cycle(key, value) {
 		if (value === copy) {
@@ -349,7 +360,7 @@ function inject(it, transform) {
 };
 
 /**
- * Prepares a collection of functions for shipping by currying and adding a not chain
+ * Prepares function collection by currying and adding a not chain
  *
  * @name prepare(it)
  *
@@ -359,10 +370,10 @@ function inject(it, transform) {
  *
  * @param {Object.&lt;string, Function&gt;} it - collection of functions
  *
- * @return {Object.&lt;string, Function&gt;} - returns curried functions with an additional &#039;not&#039; chain
+ * @return {Object.&lt;string, Function&gt;} - curried functions object
  */
 function prepare(it) {
-	var not, tmp;
+	let not, tmp;
 
 	not = inject(it, negated$);
 	not = inject(not, curry$);
@@ -389,12 +400,12 @@ function prepare(it) {
  */
 function decompose(array, initial) {
 	let composer = (previous, current) =&gt; attempt(current, previous);
-	let reducer = it =&gt; array.reduce(composer, initial || it);
+	let reducer = (it) =&gt; array.reduce(composer, initial || it);
 
 	return initial ? reducer(initial) : reducer;
 }
 
-var is$ = {
+let is$ = {
 	element: (object) =&gt; {
 		// return object instanceof Element;
 		return object.nodeType === document.ELEMENT_NODE;
@@ -411,10 +422,65 @@ var is$ = {
 	},
 
 	equal: equals,
-	existant: exists
+	existant: exists,
 };
 
 is$ = prepare(is$);
+
+class Compare {
+	constructor(reference) {
+		this.reference = reference;
+	}
+
+	element(object) {
+		let result;
+
+		let isElementNode = (it) =&gt;
+			it.nodeType === document.ELEMENT_NODE;
+
+		// let isElement = it =&gt;
+		// 	object instanceof Element;
+
+		result = isElementNode(object);
+
+		return result === !this.reference.polarity;
+	}
+
+	fragment(object) {
+		let result;
+
+		let isDocumentFragmentNode = (it) =&gt;
+			it.nodeType === document.DOCUMENT_FRAGMENT_NODE;
+
+		// let isDocumentFragment = it =&gt;
+		// 	it.constructor === DocumentFragment;
+
+		result = isDocumentFragmentNode(object);
+
+		return result === !this.reference.polarity;
+	}
+
+	text(object) {
+		let isTextNode = (it) =&gt;
+			object.nodeType === document.TEXT_NODE;
+
+		// let isText = it =&gt;
+		// 	child.constructor === Text;
+
+		result = isTextNode(object);
+
+		return result === !this.reference.polarity;
+	}
+
+	equals(object, $reference) {
+		let reference = $reference || $reference;
+	}
+
+	existant(object) {
+
+	}
+
+}
 
 export let is = is$;
 export let as = {
@@ -423,7 +489,7 @@ export let as = {
 	method: curry$,
 	flatten: flatten,
 	decomposed: decompose,
-	attempt: attempt
+	attempt: attempt,
 };
 //
 // console.log(is$.not.equal({a: &#039;b&#039;}, {a: &#039;b&#039;, c: &#039;d&#039;}));</textarea>
