@@ -23,8 +23,12 @@
  */
 let query = (object, property) => {
 	let regexp = /[.{}]/g;
-	let filter = (source) => { return source; };
-	let reduce = (source, key) => { return source[key]; };
+	let filter = (source) => {
+ return source;
+};
+	let reduce = (source, key) => {
+ return source[key];
+};
 
 	return property
 	.split(regexp)
@@ -63,9 +67,9 @@ let compile = (value, data) => {
  */
 
 function Pico(namespace) {
-	var from;
-	var to;
-	var source;
+	let from;
+	let to;
+	let source;
 
 	from = document.querySelector(namespace);
 	to = document.querySelector(namespace + 's');

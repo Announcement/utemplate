@@ -1,5 +1,5 @@
 // leeches off of the information...
-import {is, as} from './helpers'
+import {is, as} from './helpers';
 
 export default class Parasite {
 	constructor(mutator) {
@@ -43,14 +43,14 @@ export default class Parasite {
 
 		for (let key in children) {
 			let child = children[key];
-			var result;
+			let result;
 
 			if (is.text(child)) {
 				if (child.textContent.trim().length > 0) {
 					result = this.mutator.apply(child, [
 						child.textContent,
 						arguments[1],
-						children
+						children,
 					]);
 				}
 			}
@@ -75,9 +75,9 @@ export default class Parasite {
 
 		for (let index in attributes) {
 			let attribute = attributes[index];
-			var result;
-			var name;
-			var value;
+			let result;
+			let name;
+			let value;
 
 			name = attribute.name;
 			value = attribute.value;
@@ -86,7 +86,7 @@ export default class Parasite {
 				result = this.mutator.apply(element, [
 					attribute.value,
 					attribute.name,
-					attributes
+					attributes,
 				]);
 			}
 
@@ -112,16 +112,16 @@ export default class Parasite {
 		// External: helpers::is.not.equal
 		// Dependencies: getChildren
 
-		var infection;
-		var children;
-		var sibilings;
+		let infection;
+		let children;
+		let sibilings;
 
 		children = this.getChildren(this.infection);
 		sibilings = this.getChildren(element);
 
 		for (let index in children) {
 			let child = children[index];
-			sibilings.every(it => is.not.equal(child, it)) && element.appendChild(child);
+			sibilings.every((it) => is.not.equal(child, it)) && element.appendChild(child);
 		}
 
 		return children;

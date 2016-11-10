@@ -2,85 +2,92 @@ import Alchemist from './alchemist';
 import Parasite from './parasite';
 
 let query = (object, property) => {
-	let regexp = /[.{}]/g;
-	let filter = (source) => { return source; };
-	let reduce = (source, key) => { return source[key]; };
+  let regexp = /[.{}]/g;
+  let filter = (source) => {
+ return source;
+};
+  let reduce = (source, key) => {
+ return source[key];
+};
 
-	return property
-	.split(regexp)
-	.filter(filter)
-	.reduce(reduce, object);
+  return property
+  .split(regexp)
+  .filter(filter)
+  .reduce(reduce, object);
 };
 
 let compile = (value, data) => {
-	let regexp = /\{([^}]+)\}/g;
-	
-	let replacement = (original, property) => {
-		return query(data, property) || '';
-	};
+  let regexp = /\{([^}]+)\}/g;
 
-	return value
-	.trim()
-	.replace(regexp, replacement);
+  let replacement = (original, property) => {
+    return query(data, property) || '';
+  };
+
+  return value
+  .trim()
+  .replace(regexp, replacement);
 };
 
 let genetics = function(source) {
-	return input => compile(input, source);
-}
+  return (input) => compile(input, source);
+};
 
 export default class nano {
-	constructor(element) {
-		this.rendered = [];
+  constructor(element) {
+    this.rendered = [];
 
-		this.setTemplate(element);
-	}
+    this.setTemplate(element);
+  }
 
-	setTemplate(it) {
-		var element;
+  setTemplate(it) {
+    let element;
 
-		element = Alchemist.asElement(it);
-		this.template = element;
+    element = Alchemist.asElement(it);
+    this.template = element;
 
-		return element;
-	}
+    return element;
+  }
 
-	getTemplate() {
-		return this.template;
-	}
+  getTemplate() {
+    return this.template;
+  }
 
-	fromObject(object) {
-		var template;
-		var cloned;
-		var parasite;
-		var element;
-		var packet;
+  fromObject(object) {
+    let template;
+    let cloned;
+    let parasite;
+    let element;
+    let packet;
 
-		template = this.getTemplate();
-		cloned = template.cloneNode(true);
-		parasite = new Parasite(genetics(object));
+    template = this.getTemplate();
+    cloned = template.cloneNode(true);
+    parasite = new Parasite(genetics(object));
 
-		element = parasite.infect(cloned);
+    element = parasite.infect(cloned);
 
-		packet = {
-			'object': object,
-			'element': element,
-			'parasite': parasite
-		};
+    packet = {
+      'object': object,
+      'element': element,
+      'parasite': parasite,
+    };
 
-		this.rendered.push(packet);
+    this.rendered.push(packet);
 
-		return element;
-	}
+    return element;
+  }
 
-	setOutput(it) {
-		var element;
-		var that;
+  setOutput(it) {
+    let element;
 
-		element = Alchemist.asElement(it);
+    element = Alchemist.asElement(it);
 
-		while (that = this.rendered.shift()) {
-			that.parasite.addChildren(element);
-		}
-	}
+    let isEmpty = (it) => this.rendered.length === 0;
+    let addChildren = (it) => it.parasite.addChildren(element);
+    let fromRendered = (it) => this.rendered.shift();
+
+    while (!isEmpty()) {
+      addChildren(fromRendered());
+    }
+  }
 
 }

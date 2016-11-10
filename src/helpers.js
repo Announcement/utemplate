@@ -6,11 +6,11 @@
  *
  * @param {Object} it - Array like object
  *
- * @return {Array}
+ * @return {Array} - implicit array object
  */
-var array$ = function (it) {
+let array$ = function(it) {
 	return Array.prototype.slice.call(it, 0);
-}
+};
 
 /**
  * Appends values to an Array,
@@ -21,10 +21,10 @@ var array$ = function (it) {
  * @param {Array} array - list of existing items
  * @param {Array} values - proposed additions to the lsit
  *
- * @return {Array}
+ * @return {Array} - collective array
  */
 function combine(array, values) {
-	var index;
+	let index;
 
 	array = array.concat([]);
 
@@ -36,29 +36,40 @@ function combine(array, values) {
 }
 
 /**
- * Returns a modified function that can be called with currying
+ * Returns a modified function with lazy option assocations
  *
  * @function curry
  *
- * @see array$
- *
  * @param {Function} method - function to be curried
  *
- * @return {Function}
+ * @return {Function} curried functions
  */
 function curry$(method) {
+  /**
+  * Generated method through currying, allowing chainibility
+  * @function transform
+  *
+  * @see combine
+  * @this
+  *
+  * @param {Array} params - arguments array
+  *
+  * @return {Object} piped output from source curry method
+  */
 	function transform(params) {
-		var context;
-		return function() {
-			var args = combine(params, array$(arguments));
+		let context;
+
+		return function(...input) {
+			let args = combine(params, array$(arguments));
+
 			context = context || this;
 
-			if (args.length < method.length || args.some(it => it === undefined )) {
+			if (args.length < method.length || args.some((it) => it === undefined )) {
 				return transform(args);
 			} else {
 				return method.apply(context, args);
 			}
-		}
+		};
 	}
 	return method.length <= 1 ? method : transform([]);
 }
@@ -118,12 +129,12 @@ let has = curry$((object, property) => {
  * @return Array
  */
 function flatten(array) {
-	var isArray;
-	var toArray;
-	var fromArray;
+	let isArray;
+	let toArray;
+	let fromArray;
 
-	isArray = it => it.constructor === Array;
-	toArray = it => isArray(it) ? it : [it];
+	isArray = (it) => it.constructor === Array;
+	toArray = (it) => isArray(it) ? it : [it];
 	fromArray = (a, b) => a.concat(b);
 
 	while (array.some(isArray)) {
@@ -160,13 +171,13 @@ function equals(reference, object) {
 
 	return flatten([
 		pair(reference),
-		pair(object)
+		pair(object),
 	])
 	.every((item) => {
-		return
+		return;
 		has(reference)(item.key) &&
 		has(object)(item.key) &&
-		equals(reference[item.key], object[item.key])
+		equals(reference[item.key], object[item.key]);
 	});
 }
 /**
@@ -194,9 +205,9 @@ function exists(it) {
  * @return {Object}
  */
 function attempt(mutation, subject) {
-	var parameters;
-	var alternative;
-	var response;
+	let parameters;
+	let alternative;
+	let response;
 
 	parameters = array$(arguments).slice(1);
 	alternative = parameters.length === 1 ? parameters[0] : parameters;
@@ -232,7 +243,7 @@ function clone(object) {
  * @return {Object.<string, Function>}
  */
 function inject(it, transform) {
-	var copy = {};
+	let copy = {};
 
 	function cycle(key, value) {
 		if (value === copy) {
@@ -258,7 +269,7 @@ function inject(it, transform) {
 };
 
 /**
- * Prepares a collection of functions for shipping by currying and adding a not chain
+ * Prepares function collection by currying and adding a not chain
  *
  * @name prepare(it)
  *
@@ -268,10 +279,10 @@ function inject(it, transform) {
  *
  * @param {Object.<string, Function>} it - collection of functions
  *
- * @return {Object.<string, Function>} - returns curried functions with an additional 'not' chain
+ * @return {Object.<string, Function>} - curried functions object
  */
 function prepare(it) {
-	var not, tmp;
+	let not, tmp;
 
 	not = inject(it, negated$);
 	not = inject(not, curry$);
@@ -298,12 +309,12 @@ function prepare(it) {
  */
 function decompose(array, initial) {
 	let composer = (previous, current) => attempt(current, previous);
-	let reducer = it => array.reduce(composer, initial || it);
+	let reducer = (it) => array.reduce(composer, initial || it);
 
 	return initial ? reducer(initial) : reducer;
 }
 
-var is$ = {
+let is$ = {
 	element: (object) => {
 		// return object instanceof Element;
 		return object.nodeType === document.ELEMENT_NODE;
@@ -320,10 +331,65 @@ var is$ = {
 	},
 
 	equal: equals,
-	existant: exists
+	existant: exists,
 };
 
 is$ = prepare(is$);
+
+class Compare {
+	constructor(reference) {
+		this.reference = reference;
+	}
+
+	element(object) {
+		let result;
+
+		let isElementNode = (it) =>
+			it.nodeType === document.ELEMENT_NODE;
+
+		// let isElement = it =>
+		// 	object instanceof Element;
+
+		result = isElementNode(object);
+
+		return result === !this.reference.polarity;
+	}
+
+	fragment(object) {
+		let result;
+
+		let isDocumentFragmentNode = (it) =>
+			it.nodeType === document.DOCUMENT_FRAGMENT_NODE;
+
+		// let isDocumentFragment = it =>
+		// 	it.constructor === DocumentFragment;
+
+		result = isDocumentFragmentNode(object);
+
+		return result === !this.reference.polarity;
+	}
+
+	text(object) {
+		let isTextNode = (it) =>
+			object.nodeType === document.TEXT_NODE;
+
+		// let isText = it =>
+		// 	child.constructor === Text;
+
+		result = isTextNode(object);
+
+		return result === !this.reference.polarity;
+	}
+
+	equals(object, $reference) {
+		let reference = $reference || $reference;
+	}
+
+	existant(object) {
+
+	}
+
+}
 
 export let is = is$;
 export let as = {
@@ -332,7 +398,7 @@ export let as = {
 	method: curry$,
 	flatten: flatten,
 	decomposed: decompose,
-	attempt: attempt
+	attempt: attempt,
 };
 //
 // console.log(is$.not.equal({a: 'b'}, {a: 'b', c: 'd'}));

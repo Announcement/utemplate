@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Plato - src/milli.js</title>
+  <title>Plato - src\milli.js</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
@@ -36,7 +36,7 @@
 
 <div class="jumbotron">
   <div class="container">
-    <h1>src/milli.js</h1>
+    <h1>src\milli.js</h1>
   </div>
 </div>
 
@@ -44,11 +44,11 @@
   <div class="row">
     <div class="col-md-6">
       <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
-      <p class="stat">75.08</p>
+      <p class="stat">75.29</p>
     </div>
     <div class="col-md-6">
       <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
-      <p class="stat">214</p>
+      <p class="stat">212</p>
     </div>
   </div>
   <div class="row historical">
@@ -93,11 +93,11 @@
 import Alchemist from &#039;./alchemist&#039;;
 import Parasite from &#039;./parasite&#039;;
 import {is, as} from &#039;./helpers&#039;;
-
+//getDatBooty6
 let query = (object, property) =&gt; {
 	let regexp = /[.{}]/g;
-	let filter = (source) =&gt; { return source; };
-	let reduce = (source, key) =&gt; { return source[key]; };
+	let filter = source =&gt; source;
+	let reduce = (source, key) =&gt; source[key];
 
 	return property
 	.split(regexp)
@@ -147,7 +147,7 @@ export default class Milli {
     this.sources = sources;
   }
 
-  setContent() {
+  provide() {
     var output;
 
     output = this.output;
@@ -175,7 +175,7 @@ export default class Milli {
     });
   }
 
-  getContent() {
+  generate() {
     var template;
     var methods;
 
@@ -183,9 +183,7 @@ export default class Milli {
     methods = this.methods;
 
     let isInfected = it =&gt; {
-      var content;
-
-      content = it.parsed || it.content;
+      let content = it.parsed || it.content;
 
       if (is.not.existant(it.parasite)) {
         it.parasite = new Parasite(genetics(content));
@@ -207,8 +205,9 @@ export default class Milli {
       var result;
 
       result = methods.reduce(function(previous, current, index) {
-        let rendered = current(previous);
+        var rendered;
 
+				rendered = current(previous);
         it.mutations[index] = rendered;
 
         return rendered || previous;
@@ -252,7 +251,7 @@ export default class Milli {
     this.output = element;
 
     if (this.sources.length &gt; 0) {
-      this.setContent();
+      this.provide();
     }
 
     return element;
@@ -261,18 +260,17 @@ export default class Milli {
   fromObject(it) {
     var packet;
 
-    packet = {};
-
     if (it.constructor !== Object) {
       return false;
     }
 
+    packet = {};
     packet.content = it;
 
     this.sources.push(packet);
 
-    this.getContent();
-    this.setContent();
+    this.generate();
+    this.provide();
 
     return it;
   }
@@ -282,7 +280,7 @@ export default class Milli {
       return false;
     }
 
-    this.getContent();
+    this.generate();
     this.methods.push(it);
 
     return it;

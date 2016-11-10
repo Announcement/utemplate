@@ -1,4 +1,4 @@
-import {is, as} from './helpers'
+import {is, as} from './helpers';
 
 // transmutating elements =)
 export default class Alchemist {
@@ -42,7 +42,7 @@ export default class Alchemist {
 				Alchemist.fromQuerySelector,
 				Alchemist.fromSizzle,
 				// Alchemist.fromTemplate,
-				Alchemist.fromFragment
+				Alchemist.fromFragment,
 		];
 
 		let result = as.decomposed(waterfall, element);

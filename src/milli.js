@@ -1,12 +1,12 @@
-import { version } from '../package.json';
+import {version} from '../package.json';
 import Alchemist from './alchemist';
 import Parasite from './parasite';
 import {is, as} from './helpers';
-//getDatBooty6
+
 let query = (object, property) => {
 	let regexp = /[.{}]/g;
-	let filter = (source) => { return source; };
-	let reduce = (source, key) => { return source[key]; };
+	let filter = (source) => source;
+	let reduce = (source, key) => source[key];
 
 	return property
 	.split(regexp)
@@ -27,7 +27,7 @@ let compile = (value, data) => {
 };
 
 let genetics = function(source) {
-	return input => compile(input, source);
+	return (input) => compile(input, source);
 };
 
 export default class Milli {
@@ -43,21 +43,21 @@ export default class Milli {
   }
 
   setMutations(source) {
-    var methods;
+    let methods;
 
     methods = this.methods;
   }
 
   setSources(method) {
-    var sources;
+    let sources;
 
     sources = this.sources.map(method);
 
     this.sources = sources;
   }
 
-  setContent() {
-    var output;
+  provide() {
+    let output;
 
     output = this.output;
 
@@ -65,14 +65,14 @@ export default class Milli {
       return false;
     }
 
-    this.setSources(source => {
+    this.setSources((source) => {
       if (is.existant(source.children)) {
         return source;
       }
 
-      var parasite;
-      var compiled;
-      var children;
+      let parasite;
+      let compiled;
+      let children;
 
       parasite = source.parasite;
       compiled = source.compiled;
@@ -84,17 +84,15 @@ export default class Milli {
     });
   }
 
-  getContent() {
-    var template;
-    var methods;
+  generate() {
+    let template;
+    let methods;
 
     template = this.source;
     methods = this.methods;
 
-    let isInfected = it => {
-      var content;
-
-      content = it.parsed || it.content;
+    let isInfected = (it) => {
+      let content = it.parsed || it.content;
 
       if (is.not.existant(it.parasite)) {
         it.parasite = new Parasite(genetics(content));
@@ -103,7 +101,7 @@ export default class Milli {
       return it.parasite;
     };
 
-    let isCompiled = it => {
+    let isCompiled = (it) => {
       if (is.not.existant(it.compiled)) {
         let cloned = template.cloneNode(true);
         let element = it.parasite.infect(cloned);
@@ -112,12 +110,13 @@ export default class Milli {
       return it.compiled;
     };
 
-    let eachMutation = it => {
-      var result;
+    let eachMutation = (it) => {
+      let result;
 
       result = methods.reduce(function(previous, current, index) {
-        let rendered = current(previous);
+        let rendered;
 
+				rendered = current(previous);
         it.mutations[index] = rendered;
 
         return rendered || previous;
@@ -128,7 +127,7 @@ export default class Milli {
       return result;
     };
 
-    let isMutation = it =>
+    let isMutation = (it) => {
       if (is.not.existant(it.mutations)) {
         it.mutations = [];
       }
@@ -140,7 +139,7 @@ export default class Milli {
       return it.mutations;
     };
 
-    this.setSources(source => {
+    this.setSources((source) => {
       let mutation = isMutation(source);
       let infected = isInfected(source);
       let compiled = isCompiled(source);
@@ -150,7 +149,7 @@ export default class Milli {
   }
 
   setDestination(it) {
-    var element;
+    let element;
 
     element = Alchemist.asElement(it);
 
@@ -161,27 +160,26 @@ export default class Milli {
     this.output = element;
 
     if (this.sources.length > 0) {
-      this.setContent();
+      this.provide();
     }
 
     return element;
   }
 
   fromObject(it) {
-    var packet;
-
-    packet = {};
+    let packet;
 
     if (it.constructor !== Object) {
       return false;
     }
 
+    packet = {};
     packet.content = it;
 
     this.sources.push(packet);
 
-    this.getContent();
-    this.setContent();
+    this.generate();
+    this.provide();
 
     return it;
   }
@@ -191,23 +189,23 @@ export default class Milli {
       return false;
     }
 
-    this.getContent();
+    this.generate();
     this.methods.push(it);
 
     return it;
   }
 
   pipe(object) {
-    var waterfall;
-    var result;
+    let waterfall;
+    let result;
 
     waterfall = [
       this.setDestination,
       this.fromObject,
-      this.fromMethod
+      this.fromMethod,
     ];
 
-    waterfall.some(method => result = method.call(this, object));
+    waterfall.some((method) => result = method.call(this, object));
 
     return this;
   }

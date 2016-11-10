@@ -1,10 +1,10 @@
-import { version } from '../package.json';
+import {version} from '../package.json';
 import Alchemist from './alchemist';
 import Parasite from './parasite';
 
 let query = (object, property) => {
 	let regexp = /[.{}]/g;
-	let filter = source => source;
+	let filter = (source) => source;
 	let reduce = (source, key) => source[key];
 
 	return property
@@ -69,7 +69,7 @@ export default class Template {
 	}
 
 	fromData(data) {
-		var tracker;
+		let tracker;
 
 		tracker = {};
 		tracker.source = data;
@@ -93,7 +93,7 @@ export default class Template {
 	}
 
 	route(flow) {
-		var that;
+		let that;
 
 		if (flow.constructor === Object) {
 			return this.fromData(flow);
@@ -111,7 +111,7 @@ export default class Template {
 	}
 
 	render() {
-		var grid;
+		let grid;
 		/*
 		let parser = ((previous, current) => {
 			if (previous.passed.indexOf(current) !== -1) {
@@ -164,7 +164,6 @@ export default class Template {
 	}
 
 	pipe(flow) {
-
 		this.route(flow);
 		this.render();
 		return this;

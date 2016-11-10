@@ -22,8 +22,8 @@ class Source {
 	}
 }
 
-var message;
-var source;
+let message;
+let source;
 
 // initialization
 message = new Template('#message');
@@ -32,7 +32,7 @@ message = new Template('#message');
 greeting = new Source({
 	title: 'Untitled Document',
 	from: 'Anonymous',
-	content: 'Hello, world!'
+	content: 'Hello, world!',
 });
 
 // preperation
@@ -43,8 +43,8 @@ message.pipe('#messages');
 
 /* Optional // */
 
-var helper;
-var synchronization;
+let helper;
+let synchronization;
 
 // mutation
 
