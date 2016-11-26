@@ -205,7 +205,7 @@ export default class Milli {
       this.fromMethod,
     ];
 
-    waterfall.some((method) => result = method.call(this, object));
+    waterfall.some(method => result = method.call(this, object));
 
     return this;
   }
