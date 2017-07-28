@@ -46,7 +46,7 @@
   "author": "Jacob Francis Powers",
   "license": "MIT",
   "dependencies": {
-    "helpers": "file:///C:\\Users\\Francis\\Documents\\Projects\\helpers"
+    "helpers": "Announcement/helpers"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
