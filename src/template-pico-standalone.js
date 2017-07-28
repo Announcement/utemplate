@@ -1,4 +1,7 @@
 /*
+  This is not a driver!
+  This is a standalone copy-paste program included for convenience.
+
   Benefits:
     - Impressively light weight (lite, embeddable)
 
@@ -15,6 +18,7 @@
 /**
  * Acquires a property from an object.
  * @function query
+ * @version 1
  *
  * @param {Object.<string>} object - Container of insertion key-value pairs
  * @param {String} property - named key of object to be pulled from
@@ -23,13 +27,10 @@
  */
 let query = (object, property) => {
   let regexp = /[.{}]/g
-  let filter = (source) => source
+  let filter = source => source
   let reduce = (source, key) => source[key]
 
-  return property
-  .split(regexp)
-  .filter(filter)
-  .reduce(reduce, object)
+  return property.split(regexp).filter(filter).reduce(reduce, object)
 }
 
 /**
@@ -48,9 +49,7 @@ let compile = (value, data) => {
     return query(data, property) || ''
   }
 
-  return value
-  .trim()
-  .replace(regexp, replacement)
+  return value.trim().replace(regexp, replacement)
 }
 
 /**
@@ -62,7 +61,7 @@ let compile = (value, data) => {
  * @return {Function}
  */
 
-function Pico(namespace) {
+function Pico (namespace) {
   let from
   let to
   let source
@@ -78,7 +77,7 @@ function Pico(namespace) {
    *
    * @param {Object.<String>} data - content to be rendered
    */
-  return function(data) {
+  return function (data) {
     to.innerHTML += compile(source, data)
   }
 }

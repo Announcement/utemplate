@@ -2,36 +2,11 @@ import {version} from '../package.json'
 import Alchemist from './alchemist'
 import Parasite from './parasite'
 import {is, as} from './helpers'
+import {query, compile} from './shared'
 
-let query = (object, property) => {
-  let regexp = /[.{}]/g
-  let filter = (source) => source
-  let reduce = (source, key) => source[key]
+let genetics = source => input => compile(input, source)
 
-  return property
-  .split(regexp)
-  .filter(filter)
-  .reduce(reduce, object)
-}
-
-let compile = (value, data) => {
-  let regexp = /\{([^}]+)\}/g
-
-  let replacement = (original, property) => {
-    return query(data, property) || ''
-  }
-
-  return value
-  .trim()
-  .replace(regexp, replacement)
-}
-
-let genetics = function (source) {
-  return (input) => compile(input, source)
-}
-
-export default class Milli {
-
+export default class Template {
   constructor (source) {
     this.source = Alchemist.asElement(source)
     this.methods = []

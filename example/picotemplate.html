@@ -1,0 +1,23 @@
+<template id="message">{content}</template>
+<div id="messages"></div>
+
+<!-- standalone -->
+<script>
+// load the template
+let template = template('#message')
+
+// generate the data
+template({content: 'hi'})
+</script>
+
+<!-- driver -->
+<script>
+// load the template
+let template = new Template('#message')
+
+// optionally change the target
+template.setDestination('#messages')
+
+// generate the data
+template.generate({content: 'hi'})
+</script>

@@ -1,4 +1,4 @@
-import {is, as} from './helpers'
+import { is, as } from './helpers'
 
 // transmutating elements =)
 export default class Alchemist {

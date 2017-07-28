@@ -23,5 +23,5 @@ export default {
       'plugins': ['external-helpers']
     })
   ],
-  dest: 'bin/utemplate.js'
+  dest: 'bin/index.js'
 }

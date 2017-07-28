@@ -1,35 +1,13 @@
 import Alchemist from './alchemist'
 import Parasite from './parasite'
 import {is} from './helpers'
-
-let query = (object, property) => {
-  let regexp = /[.{}]/g
-  let filter = (source) => source
-  let reduce = (source, key) => source[key]
-
-  return property
-  .split(regexp)
-  .filter(filter)
-  .reduce(reduce, object)
-}
-
-let compile = (value, data) => {
-  let regexp = /\{([^}]+)\}/g
-
-  let replacement = (original, property) => {
-    return query(data, property) || ''
-  }
-
-  return value
-  .trim()
-  .replace(regexp, replacement)
-}
+import {query, compile} from './shared'
 
 let genetics = function(source) {
   return (input) => compile(input, source)
 }
 
-export default class nano {
+export default class Template {
   constructor(element) {
     this.rendered = []
 
