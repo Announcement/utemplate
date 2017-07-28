@@ -2,13 +2,13 @@
   "name": "utemplate",
   "version": "2.2.5",
   "description": "Templates are supported by default in HTML5, this is a single lightweight script to prepare them for you.",
-  "main": "bin/index.js",
+  "main": "bin/utemplate.js",
   "scripts": {
     "pretest": "plato -r -d report src -e .eslintrc.json",
     "test": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "preversion": "rollup -c",
     "postversion": "babel src -d lib",
-    "prepublish": "uglifyjs bin/index.js -c --source-map bin/index.min.js.map --source-map-root bin -o bin/index.min.js"
+    "prepublish": "uglifyjs bin/utemplate.js -c --source-map bin/utemplate.min.js.map --source-map-root bin -o bin/utemplate.min.js"
   },
   "eslintConfig": {
     "sourceType": "module",
@@ -45,7 +45,9 @@
   ],
   "author": "Jacob Francis Powers",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "helpers": "file:///C:\\Users\\Francis\\Documents\\Projects\\helpers"
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-plugin-external-helpers": "^6.18.0",

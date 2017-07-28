@@ -1,3 +1,7 @@
+'use strict'
+
+var version = '2.2.5'
+
 /** @module helpers */
 
 /**
@@ -159,7 +163,8 @@ function flatten (array) {
  */
 function equals (reference, object) {
   // Are they of the same type?
-  if (typeof reference !== typeof object || reference.constructor !== object.constructor) {
+  if (typeof reference !== typeof object ||
+      reference.constructor !== object.constructor) {
     return false
   }
 
@@ -173,9 +178,7 @@ function equals (reference, object) {
     pair(object)
   ])
   .every((item) => {
-    return has(reference)(item.key) &&
-      has(object)(item.key) &&
-      equals(reference[item.key], object[item.key])
+    return has(reference)(item.key) && has(object)(item.key) && equals(reference[item.key], object[item.key])
   })
 }
 /**
@@ -216,19 +219,6 @@ function attempt (mutation, subject) {
 }
 
 /**
- * Clones an object
- *
- * @function clone
- *
- * @param {Object} object - object to be cloned
- *
- * @return {Object}
- */
-function clone (object) {
-  return Object.assign({}, object)
-}
-
-/**
  * Injects a transformer into each element of a collection
  *
  * @name inject(it, transformer)
@@ -264,7 +254,7 @@ function inject (it, transform) {
   }
 
   return copy
-};
+}
 
 /**
  * Prepares function collection by currying and adding a not chain
@@ -334,63 +324,8 @@ let is$ = {
 
 is$ = prepare(is$)
 
-class Compare {
-  constructor (reference) {
-    this.reference = reference
-  }
-
-  element (object) {
-    let result
-
-    let isElementNode = (it) =>
-      it.nodeType === document.ELEMENT_NODE
-
-    // let isElement = it =>
-    //   object instanceof Element;
-
-    result = isElementNode(object)
-
-    return result === !this.reference.polarity
-  }
-
-  fragment (object) {
-    let result
-
-    let isDocumentFragmentNode = (it) =>
-      it.nodeType === document.DOCUMENT_FRAGMENT_NODE
-
-    // let isDocumentFragment = it =>
-    //   it.constructor === DocumentFragment;
-
-    result = isDocumentFragmentNode(object)
-
-    return result === !this.reference.polarity
-  }
-
-  text (object) {
-    let isTextNode = (it) =>
-      object.nodeType === document.TEXT_NODE
-
-    // let isText = it =>
-    //   child.constructor === Text;
-
-    let result = isTextNode(object)
-
-    return result === !this.reference.polarity
-  }
-
-  equals (object, $reference) {
-    return reference = $reference || $reference
-  }
-
-  existant (object) {
-
-  }
-
-}
-
-export let is = is$
-export let as = {
+let is = is$
+let as = {
   array: array$,
   pair: pair,
   method: curry$,
@@ -400,3 +335,161 @@ export let as = {
 }
 //
 // console.log(is$.not.equal({a: 'b'}, {a: 'b', c: 'd'}));
+
+// transmutating elements =)
+class Alchemist {
+  constructor (element) {
+    this.setElement(element)
+  }
+
+  static fromQuerySelector (element) {
+    // find specified element
+    if (typeof element === 'string') {
+      return document.querySelector(element)
+    }
+  }
+
+  static fromSizzle (element) {
+    // it's a jQuery node
+    // if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
+    if (typeof element.get === 'function') {
+      return element.get(0)
+    }
+    // }
+  }
+
+  static fromTemplate (element) {
+    // html5 template content
+
+    if (is.element(element)) {
+      return element.content
+    }
+  }
+
+  static fromFragment (element) {
+    // defragment
+    if (is.fragment(element) && element.hasChildNodes()) {
+      return element.firstElementChild
+    }
+  }
+
+  static asElement (element) {
+    let waterfall = [
+      Alchemist.fromQuerySelector,
+      Alchemist.fromSizzle,
+        // Alchemist.fromTemplate,
+      Alchemist.fromFragment
+    ]
+
+    let result = as.decomposed(waterfall, element)
+
+    // element is already provided
+    if (result && is.element(result)) {
+      return result
+    }
+  }
+
+  setElement (element) {
+    this.element = Alchemist.asElement(element)
+    return this
+  }
+
+  getElement () {
+    return this.element
+  }
+}
+
+class Cache {
+  constructor () {
+    this.cells = []
+  }
+
+  static safe (item) {
+    if (typeof item === 'function') {
+      return item.name
+    }
+    return item
+  }
+
+  static multiply (rows, columns) {
+    let cells = []
+    let total = rows.length * columns.length
+
+    for (var i = 0; i < total; i++) {
+      let x = i % columns.length
+      let y = Math.floor(i / columns.length)
+
+      let column = columns[x]
+      let row = rows[y]
+
+      cells.push({column, row})
+    }
+
+    return cells
+  }
+
+  static exclude (list) {
+    return function (item) {
+      return list.indexOf(item) === -1
+    }
+  }
+
+  updates (list) {
+    let cells = this.cells
+    let original = list.filter(Cache.exclude(cells))
+
+    return original
+  }
+}
+
+// import {is, as} from 'helpers'
+
+// import Symbiotic from './symbiotic'
+
+class Kilo {
+
+  constructor (source) {
+    this.source = Alchemist.asElement(source)
+
+    this.cache = new Cache()
+
+    this.methods = []
+    this.sources = []
+  }
+
+  static get version () {
+    return version
+  }
+
+  synchronize () {
+    let sources = this.sources
+    let methods = this.methods
+    let cache = this.cache
+
+    let cells = Cache.multiply(sources, methods)
+    let updates = cache.update(cells)
+
+    console.log(updates)
+  }
+
+  addSource (source) {
+    this.sources.push(source)
+    this.synchronize()
+  }
+
+  addSources (...sources) {
+    sources.forEach(it => this.sources.push(it))
+    this.synchronize()
+  }
+
+  addMethod (method) {
+    this.methods.push(method)
+  }
+
+  addMethods (...methods) {
+    methods.forEach(it => this.methods.push(it))
+    this.synchronize()
+  }
+}
+
+module.exports = Kilo

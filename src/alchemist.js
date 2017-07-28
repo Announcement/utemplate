@@ -1,64 +1,61 @@
-import {is, as} from './helpers';
+import {is, as} from './helpers'
 
 // transmutating elements =)
 export default class Alchemist {
-	constructor(element) {
-		this.setElement(element);
-	}
+  constructor (element) {
+    this.setElement(element)
+  }
 
-	static fromQuerySelector(element) {
-		// find specified element
-		if (typeof element === 'string') {
-			return document.querySelector(element);
-		}
-	}
+  static isQuerySelector (element) {
+    return typeof element === 'string'
+  }
+  static fromQuerySelector (element) {
+    return document.querySelector(element)
+  }
 
-	static fromSizzle(element) {
-		// it's a jQuery node
-		// if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
-		if (typeof element.get === 'function') {
-			return element.get(0);
-		}
-		// }
-	}
+  static isSizzle (element) {
+    return typeof element === 'function'
+  }
+  static fromSizzle (element) {
+    return element.get(0)
+  }
 
-	static fromTemplate(element) {
-		// html5 template content
+  static isTemplate (element) {
+    return is.element(element)
+  }
+  static fromTemplate (element) {
+    return element.content
+  }
 
-		if (is.element(element)) {
-			return element.content;
-		}
-	}
+  static isFragment (element) {
+    return is.fragment(element) && element.hasChildNodes()
+  }
+  static fromFragment (element) {
+    return element.firstElementChild
+  }
 
-	static fromFragment(element) {
-		// defragment
-		if (is.fragment(element) && element.hasChildNodes()) {
-			return element.firstElementChild;
-		}
-	}
+  static asElement (element) {
+    let waterfall = [
+      Alchemist.fromQuerySelector,
+      Alchemist.fromSizzle,
+      Alchemist.fromTemplate,
+      Alchemist.fromFragment
+    ]
 
-	static asElement(element) {
-		let waterfall = [
-				Alchemist.fromQuerySelector,
-				Alchemist.fromSizzle,
-				// Alchemist.fromTemplate,
-				Alchemist.fromFragment,
-		];
+    let result = as.decomposed(waterfall, element)
 
-		let result = as.decomposed(waterfall, element);
+    // element is already provided
+    if (result && is.element(result)) {
+      return result
+    }
+  }
 
-		// element is already provided
-		if (result && is.element(result)) {
-			return result;
-		}
-	}
+  setElement (element) {
+    this.element = Alchemist.asElement(element)
+    return this
+  }
 
-	setElement(element) {
-		this.element = Alchemist.asElement(element);
-		return this;
-	}
-
-	getElement() {
-		return this.element;
-	}
+  getElement () {
+    return this.element
+  }
 }

@@ -1,133 +1,133 @@
 // leeches off of the information...
-import {is, as} from './helpers';
+import {is, as} from './helpers'
 
 export default class Parasite {
-	constructor(mutator) {
-		this.setMutator(mutator);
-	}
+  constructor (mutator) {
+    this.setMutator(mutator)
+  }
 
-	getChildren(element) {
-		// Extternal helpers::as.array
+  getChildren (element) {
+    // Extternal helpers::as.array
 
-		if (typeof element.content !== 'undefined') {
-			element = element.content;
-		}
+    if (typeof element.content !== 'undefined') {
+      element = element.content
+    }
 
-		return as.array(element.childNodes);
-	}
+    return as.array(element.childNodes)
+  }
 
-	allChildren(element) {
-		// External helpers::is.element helpers::as.flatten
-		// Dependencies: getChildren
+  allChildren (element) {
+    // External helpers::is.element helpers::as.flatten
+    // Dependencies: getChildren
 
-		let map = (function(child) {
-			return (!is.element(child)) ? child : this.allChildren(child);
-		}).bind(this);
+    let map = function (child) {
+      return (!is.element(child)) ? child : this.allChildren(child)
+    }.bind(this)
 
-		let children = this.getChildren(element).map(map);
+    let children = this.getChildren(element).map(map)
 
-		return as.flatten(children);
-	}
+    return as.flatten(children)
+  }
 
-	getAttributes(element) {
-		// External helpers::as.array
+  getAttributes (element) {
+    // External helpers::as.array
 
-		return as.array(element.attributes);
-	}
+    return as.array(element.attributes)
+  }
 
-	setChildren(element) {
-		// External: helpers::is.element helpers::is.existant
+  setChildren (element) {
+    // External: helpers::is.element helpers::is.existant
 
-		let attributes = this.setAttributes(element);
-		let children = this.getChildren(element);
+    let attributes = this.setAttributes(element)
+    let children = this.getChildren(element)
 
-		for (let key in children) {
-			let child = children[key];
-			let result;
+    for (let key in children) {
+      let child = children[key]
+      let result
 
-			if (is.text(child)) {
-				if (child.textContent.trim().length > 0) {
-					result = this.mutator.apply(child, [
-						child.textContent,
-						arguments[1],
-						children,
-					]);
-				}
-			}
+      if (is.text(child)) {
+        if (child.textContent.trim().length > 0) {
+          result = this.mutator.apply(child, [
+            child.textContent,
+            arguments[1],
+            children
+          ])
+        }
+      }
 
-			if (is.element(child)) {
-				this.setChildren(child);
-			}
+      if (is.element(child)) {
+        this.setChildren(child)
+      }
 
-			if (is.existant(result)) {
-				child.textContent = result;
-			}
-		};
+      if (is.existant(result)) {
+        child.textContent = result
+      }
+    };
 
-		return element;
-	}
+    return element
+  }
 
-	setAttributes(element) {
-		// External: helpers::is.existant
-		// Dependencies: getAttributes
+  setAttributes (element) {
+    // External: helpers::is.existant
+    // Dependencies: getAttributes
 
-		let attributes = this.getAttributes(element);
+    let attributes = this.getAttributes(element)
 
-		for (let index in attributes) {
-			let attribute = attributes[index];
-			let result;
-			let name;
-			let value;
+    for (let index in attributes) {
+      let attribute = attributes[index]
+      let result
+      let name
+      let value
 
-			name = attribute.name;
-			value = attribute.value;
+      name = attribute.name
+      value = attribute.value
 
-			if (element.hasAttribute(name) && value.trim().length > 0) {
-				result = this.mutator.apply(element, [
-					attribute.value,
-					attribute.name,
-					attributes,
-				]);
-			}
+      if (element.hasAttribute(name) && value.trim().length > 0) {
+        result = this.mutator.apply(element, [
+          attribute.value,
+          attribute.name,
+          attributes
+        ])
+      }
 
-			if (is.existant(result)) {
-				element.setAttribute(attribute.name, result);
-			}
-		}
+      if (is.existant(result)) {
+        element.setAttribute(attribute.name, result)
+      }
+    }
 
-		return attributes;
-	}
+    return attributes
+  }
 
-	infect(element) {
-		// Dependencies: setChildren
+  infect (element) {
+    // Dependencies: setChildren
 
-		element = this.setChildren(element);
+    element = this.setChildren(element)
 
-		this.infection = element;
+    this.infection = element
 
-		return element;
-	}
+    return element
+  }
 
-	addChildren(element) {
-		// External: helpers::is.not.equal
-		// Dependencies: getChildren
+  addChildren (element) {
+    // External: helpers::is.not.equal
+    // Dependencies: getChildren
 
-		let infection;
-		let children;
-		let sibilings;
+    let infection
+    let children
+    let sibilings
 
-		children = this.getChildren(this.infection);
-		sibilings = this.getChildren(element);
+    children = this.getChildren(this.infection)
+    sibilings = this.getChildren(element)
 
-		for (let index in children) {
-			let child = children[index];
-			sibilings.every((it) => is.not.equal(child, it)) && element.appendChild(child);
-		}
+    for (let index in children) {
+      let child = children[index]
+      sibilings.every((it) => is.not.equal(child, it)) && element.appendChild(child)
+    }
 
-		return children;
-	}
+    return children
+  }
 
-	setMutator(mutator) {
-		this.mutator = mutator;
-	}
+  setMutator (mutator) {
+    this.mutator = mutator
+  }
 }

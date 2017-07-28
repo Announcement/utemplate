@@ -1,69 +1,69 @@
 class Distributor {
-		constructor() {
+  constructor () {
 
-	}
+  }
 }
 
 class Packet {
- constructor() {
+  constructor () {
 
-	}
+  }
 }
 
 class Mutator {
-	constructor() {
+  constructor () {
 
-	}
+  }
 }
 
 class Source {
-	constructor() {
+  constructor () {
 
-	}
+  }
 }
 
-let message;
-let source;
+let message
+let source
 
 // initialization
-message = new Template('#message');
+message = new Template('#message')
 
 // generation
 greeting = new Source({
-	title: 'Untitled Document',
-	from: 'Anonymous',
-	content: 'Hello, world!',
-});
+  title: 'Untitled Document',
+  from: 'Anonymous',
+  content: 'Hello, world!'
+})
 
 // preperation
-message.pipe(greeting);
+message.pipe(greeting)
 
 // destination
-message.pipe('#messages');
+message.pipe('#messages')
 
 /* Optional // */
 
-let helper;
-let synchronization;
+let helper
+let synchronization
 
 // mutation
 
 // work with objects
-function timestamp(input) {
-	return {now: new Date()}; // output
+function timestamp (input) {
+  return {now: new Date()} // output
 }
 
 // work with elements
-function virus(input) {
-	return Alchemist.synthesize(disease).infect(input);
+function virus (input) {
+  return Alchemist.synthesize(disease).infect(input)
 }
 
-helper = new Mutator(timestamp);
-synchronization = new Mutator(virus);
+helper = new Mutator(timestamp)
+synchronization = new Mutator(virus)
 
 // will be sorted automatically
 
-message.pipe(helper);
-message.pipe(synchronization);
+message.pipe(helper)
+message.pipe(synchronization)
 
-greeting.update({title: 'Greetings!'});
+greeting.update({title: 'Greetings!'})

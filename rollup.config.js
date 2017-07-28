@@ -1,6 +1,6 @@
-import json from 'rollup-plugin-json';
-import babel from 'rollup-plugin-babel';
-import sourcemaps from 'rollup-plugin-sourcemaps';
+import json from 'rollup-plugin-json'
+import babel from 'rollup-plugin-babel'
+import sourcemaps from 'rollup-plugin-sourcemaps'
 
 export default {
   entry: 'src/template.js',
@@ -12,16 +12,16 @@ export default {
     json(),
     babel({
       babelrc: false,
-      "presets": [
+      'presets': [
         [
-          "es2015",
+          'es2015',
           {
-            "modules": false
+            'modules': false
           }
         ]
       ],
-      "plugins": ["external-helpers"]
+      'plugins': ['external-helpers']
     })
   ],
-  dest: 'bin/beta.js'
-};
+  dest: 'bin/utemplate.js'
+}
