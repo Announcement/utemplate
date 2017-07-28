@@ -1,10 +1,4 @@
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Template = factory());
-}(this, (function () { 'use strict';
-
-var version = "2.2.6";
+var version = "2.2.7";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
   return typeof obj;
@@ -1001,7 +995,5 @@ var Milli = function () {
   return Milli;
 }();
 
-return Milli;
-
-})));
+export default Milli;
 //# sourceMappingURL=utemplate.js.map

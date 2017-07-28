@@ -4,7 +4,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps'
 
 export default {
   entry: 'src/template.js',
-  format: 'umd',
+  format: 'es',
   moduleName: 'Template',
   sourceMap: true,
   plugins: [
