@@ -532,14 +532,14 @@ var Compare = function () {
       // let isText = it =>
       //   child.constructor === Text;
 
-      result = isTextNode(object);
+      var result = isTextNode(object);
 
       return result === !this.reference.polarity;
     }
   }, {
     key: 'equals',
     value: function equals(object, $reference) {
-      var reference = $reference || $reference;
+      return reference = $reference || $reference;
     }
   }, {
     key: 'existant',
@@ -581,46 +581,49 @@ var Alchemist = function () {
       return this.element;
     }
   }], [{
+    key: 'isQuerySelector',
+    value: function isQuerySelector(element) {
+      return typeof element === 'string';
+    }
+  }, {
     key: 'fromQuerySelector',
     value: function fromQuerySelector(element) {
-      // find specified element
-      if (typeof element === 'string') {
-        return document.querySelector(element);
-      }
+      return document.querySelector(element);
+    }
+  }, {
+    key: 'isSizzle',
+    value: function isSizzle(element) {
+      return typeof element === 'function';
     }
   }, {
     key: 'fromSizzle',
     value: function fromSizzle(element) {
-      // it's a jQuery node
-      // if (typeof jQuery !== 'undefined' && element.constructor === jQuery) {
-      if (typeof element.get === 'function') {
-        return element.get(0);
-      }
-      // }
+      return element.get(0);
+    }
+  }, {
+    key: 'isTemplate',
+    value: function isTemplate(element) {
+      return is.element(element);
     }
   }, {
     key: 'fromTemplate',
     value: function fromTemplate(element) {
-      // html5 template content
-
-      if (is.element(element)) {
-        return element.content;
-      }
+      return element.content;
+    }
+  }, {
+    key: 'isFragment',
+    value: function isFragment(element) {
+      return is.fragment(element) && element.hasChildNodes();
     }
   }, {
     key: 'fromFragment',
     value: function fromFragment(element) {
-      // defragment
-      if (is.fragment(element) && element.hasChildNodes()) {
-        return element.firstElementChild;
-      }
+      return element.firstElementChild;
     }
   }, {
     key: 'asElement',
     value: function asElement(element) {
-      var waterfall = [Alchemist.fromQuerySelector, Alchemist.fromSizzle,
-      // Alchemist.fromTemplate,
-      Alchemist.fromFragment];
+      var waterfall = [Alchemist.fromQuerySelector, Alchemist.fromSizzle, Alchemist.fromTemplate, Alchemist.fromFragment];
 
       var result = as.decomposed(waterfall, element);
 
